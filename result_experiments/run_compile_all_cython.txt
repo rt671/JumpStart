@@ -1,4 +1,4 @@
-Compiling [1/2]: CFW_D_Similarity_Cython_SGD.pyx... FAIL: Command 'C:\Program Files\Python311\python.exe D:\work\BTP-2\Code/CythonCompiler/compile_script.py CFW_D_Similarity_Cython_SGD.pyx build_ext --inplace' returned non-zero exit status 1.
-Compiling [2/2]: Compute_Similarity_Cython.pyx... FAIL: Command 'C:\Program Files\Python311\python.exe D:\work\BTP-2\Code/CythonCompiler/compile_script.py Compute_Similarity_Cython.pyx build_ext --inplace' returned non-zero exit status 1.
-run_compile_all_cython: Compilation finished. FAILS 2/2.
+Compiling [1/2]: FW_Algorithm.pyx... PASS
+Compiling [2/2]: Compute_Similarity_Cython.pyx... PASS
+run_compile_all_cython: Compilation finished. SUCCESS.
 Compilation log can be found here: './result_experiments/run_compile_all_cython.txt'

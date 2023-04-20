@@ -1,12 +1,13 @@
-from GraphBased.RP3betaRecommender import RP3betaRecommender
-from FeatureWeighting.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
+from Collaborative_Filtering.RP3betaRecommender import RP3betaRecommender
+from FeatureWeighting.Cython.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
 
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 
-from Data_manager.Movielens_20m.Movielens20MReader import Movielens20MReader
+# from Data_manager.Movielens_20m.Movielens20MReader import Movielens20MReader
+from Data_manager.Movielens_1m.Movielens1MReader import Movielens1MReader
 from Data_manager.DataSplitter_k_fold import DataSplitter_Warm_k_fold
 
-dataReader = Movielens20MReader()
+dataReader = Movielens1MReader()
 
 # Splitting the dataset. This split will produce a warm item split
 # To replicate the original experimens use the dataset accessible here with a cold item split:
@@ -19,6 +20,8 @@ URM_train, URM_validation, URM_test = dataSplitter.get_holdout_split()
 
 # The ICM is a scipy.sparse matrix of shape |items|x|features|
 ICM = dataSplitter.get_ICM_from_name("ICM_genre")
+
+print(ICM);
 
 # This contains the items to be ignored during the evaluation step
 # In a cold items setting this should contain the indices of the warm items
@@ -57,7 +60,7 @@ similarity_collaborative = recommender_collaborative.W_sparse.copy()
 # - The collaborative similarity matrix
 # Note that we have not included the code for parameter tuning, which should be done as those are just default parameters
 
-fw_parameters =  {'epochs': 200,
+fw_parameters =  {'epochs': 5,
                   'learning_rate': 0.0001,
                   'sgd_mode': 'adam',
                   'add_zeros_quota': 1.0,
