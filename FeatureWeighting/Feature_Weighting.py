@@ -16,7 +16,7 @@ class EvaluatorCFW_D_wrapper(object):
         assert model_to_use in ["best", "last"], "EvaluatorCFW_D_wrapper: model_to_use must be either 'best' or 'incremental'. Provided value is: '{}'".format(model_to_use)
 
         self.model_to_use = model_to_use
-
+        
 
     def evaluateRecommender(self, recommender_object):
 
