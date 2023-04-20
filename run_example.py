@@ -1,13 +1,11 @@
 from GraphBased.RP3betaRecommender import RP3betaRecommender
-from FeatureWeighting.Cython.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
+from FeatureWeighting.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
 
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 
 from Data_manager.Movielens_20m.Movielens20MReader import Movielens20MReader
 from Data_manager.DataSplitter_k_fold import DataSplitter_Warm_k_fold
 
-
-# Selecting a dataset
 dataReader = Movielens20MReader()
 
 # Splitting the dataset. This split will produce a warm item split
