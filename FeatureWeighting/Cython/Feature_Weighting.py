@@ -2,6 +2,8 @@ from Base.Incremental_Training_Early_Stopping import Incremental_Training_Early_
 from Base.Recommender_utils import check_matrix
 from Base.IR_feature_weighting import okapi_BM_25, TF_IDF
 from Base.Similarity.Compute_Similarity import Compute_Similarity
+from Base.BaseSimilarityMatrixRecommender import BaseSimilarityMatrixRecommender
+from CythonCompiler.run_compile_subprocess import run_compile_subprocess
 
 import time, sys
 import numpy as np
@@ -27,7 +29,7 @@ class EvaluatorCFW_D_wrapper(object):
         return self.evaluator_object.evaluateRecommender(recommender_object)
 
 
-class Feature_Weighting(Incremental_Training_Early_Stopping):
+class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Early_Stopping):
 
     RECOMMENDER_NAME = "Feature_Weighted_Content_Based"
 
@@ -101,7 +103,7 @@ class Feature_Weighting(Incremental_Training_Early_Stopping):
         self._generate_train_data()
 
         # Import compiled module
-        from FeatureWeighting.FW_Algorithm import FW_Algorithm
+        from FeatureWeighting.Cython.FW_Algorithm import FW_Algorithm
         
         # Instantiate fast Cython implementation
         self.FW_D_Similarity = FW_Algorithm(self.row_list, self.col_list, self.data_list,
