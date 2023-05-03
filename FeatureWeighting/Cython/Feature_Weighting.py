@@ -39,16 +39,18 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         super(Feature_Weighting, self).__init__(URM_train)
 
-        if (URM_train.shape[1] != ICM.shape[0]):
-            raise ValueError("Number of items not consistent. URM contains {} but ICM contains {}".format(URM_train.shape[1], ICM.shape[0]))
+        # if (URM_train.shape[1] != ICM.shape[0]):
+        #     raise ValueError("Number of items not consistent. URM contains {} but ICM contains {}".format(URM_train.shape[1], ICM.shape[0]))
 
-        if(sim_matrix_target.shape[0] != sim_matrix_target.shape[1]):
-            raise ValueError("Items imilarity matrix is not square: rows are {}, columns are {}".format(sim_matrix_target.shape[0], sim_matrix_target.shape[1]))
+        # if(sim_matrix_target.shape[0] != sim_matrix_target.shape[1]):
+        #     raise ValueError("Items imilarity matrix is not square: rows are {}, columns are {}".format(sim_matrix_target.shape[0], sim_matrix_target.shape[1]))
 
-        if(sim_matrix_target.shape[0] != ICM.shape[0]):
-            raise ValueError("Number of items not consistent. S_matrix contains {} but ICM contains {}".format(sim_matrix_target.shape[0], ICM.shape[0]))
+        # if(sim_matrix_target.shape[0] != ICM.shape[0]):
+        #     raise ValueError("Number of items not consistent. S_matrix contains {} but ICM contains {}".format(sim_matrix_target.shape[0], ICM.shape[0]))
 
         self.sim_matrix_target = check_matrix(sim_matrix_target, 'csr')
+        print("SIM_MAT_TARGET:")
+        print(sim_matrix_target.toarray());
         self.ICM = check_matrix(ICM, 'csr')
         self.n_features = self.ICM.shape[1]
 
@@ -64,9 +66,10 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             l2_reg = 0.0,
             epochs = 50,
             topK = 300,
-            add_zeros_quota = 0.0,
+            add_zeros_quota = -1.0,
             verbose = False,
             sgd_mode = 'adagrad', gamma = 0.9, beta_1 = 0.9, beta_2 = 0.999,
+            first_time=False,
             **earlystopping_kwargs):
 
         if initialization_mode_D not in self.INIT_TYPE_VALUES:
@@ -80,6 +83,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.epochs = epochs
         self.topK = topK
         self.verbose = verbose
+        self.first_time=first_time
 
         weights_initialization_D = None
 
@@ -152,6 +156,8 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.similarity = Compute_Similarity(self.ICM.T, shrink=0, topK=self.topK, normalize=False)
         sim_mat_content = self.similarity.compute_similarity()
         sim_mat_content = check_matrix(sim_mat_content, "csr")
+        print("SIM_MAT_CONTENT:")
+        print(sim_mat_content.toarray());
 
         self.write_log("Collaborative S density: {:.2E}, nonzero cells {}".format(
             self.sim_matrix_target.nnz/self.sim_matrix_target.shape[0]**2, self.sim_matrix_target.nnz))
@@ -173,7 +179,53 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         num_samples = 0
 
-        for row_index in range(self.n_items):
+        row_change_list=[3,5]
+        # col_change_list=[]
+        if self.first_time == True :
+            for row_index in range(self.n_items):
+                num_samples=self.find_similar_items(row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
+
+        else:
+            # array  of rows and array of columns
+            for row_index in row_change_list:
+                num_samples=self.find_similar_items(row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
+            # for col_index in col_change_list:
+            #     num_samples=self.find_similar_items(col_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
+
+        if self.verbose and (time.time() - start_time_batch > 30 or num_samples == sim_mat_content.nnz*(1+self.add_zeros_quota)):
+
+            print(self.RECOMMENDER_NAME + ": Generating train data. Sample {} ( {:.2f} %) ".format(
+                    num_samples, num_samples/ sim_mat_content.nnz*(1+self.add_zeros_quota) *100))
+
+            sys.stdout.flush()
+            sys.stderr.flush()
+
+            start_time_batch = time.time()
+
+
+        self.write_log("Content S structure has {} out of {} ( {:.2f}%) nonzero collaborative cells".format(
+            num_common_coordinates, sim_mat_content.nnz, num_common_coordinates/sim_mat_content.nnz*100))
+
+        # Discarding extra cells
+        self.row_list = self.row_list[:num_samples]
+        self.col_list = self.col_list[:num_samples]
+        self.data_list = self.data_list[:num_samples]
+        # print("ALL LIST:")
+        # print(self.row_list)
+        # print(self.col_list)
+        # print(self.data_list)
+
+        data_nnz = sum(np.array(self.data_list)!=0) # number of non-zero cells in data_list
+        data_sum = sum(self.data_list)
+
+        collaborative_nnz = self.sim_matrix_target.nnz
+        collaborative_sum = sum(self.sim_matrix_target.data)
+
+        # self.write_log("Nonzero collaborative cell sum is: {:.2E}, average is: {:.2E}, "
+        #               "average over all collaborative data is {:.2E}".format(
+        #               data_sum, data_sum/data_nnz, collaborative_sum/collaborative_nnz))
+
+    def find_similar_items(self, row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples):
 
             start_pos_content = sim_mat_content.indptr[row_index]
             end_pos_content = sim_mat_content.indptr[row_index+1]
@@ -186,12 +238,14 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             target_coordinates = self.sim_matrix_target.indices[start_pos_target:end_pos_target]
 
             is_common = np.in1d(content_coordinates, target_coordinates)
+            # print(is_common);
             num_common_in_current_row = is_common.sum()
             num_common_coordinates += num_common_in_current_row
 
-
             for index in range(len(is_common)):
-
+                random_value = np.random.rand()
+                # print("RANDOM_VALUE:\n")
+                # print(random_value)
                 if num_samples == estimated_n_samples:
                     dataBlock = 1000000
                     self.row_list = np.concatenate((self.row_list, np.zeros(dataBlock, dtype=np.int32)))
@@ -206,54 +260,30 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
                     self.row_list[num_samples] = row_index
                     self.col_list[num_samples] = col_index
-
+                    # print("Row and Column is: ", row_index, " ", col_index)
+                    # print("\n")
+                    
+                    # print(self.sim_matrix_target.toarray(),"\n");
                     new_data_value = self.sim_matrix_target[row_index, col_index]
+                    # print("NEW_DATA:\n")
+                    # print(new_data_value)
 
-                    if self.normalize_similarity:
-                        new_data_value *= sum_of_squared_features[row_index]*sum_of_squared_features[col_index]
+                    # if self.normalize_similarity:
+                    #     new_data_value *= sum_of_squared_features[row_index]*sum_of_squared_features[col_index]
 
                     self.data_list[num_samples] = new_data_value
                     num_samples += 1
 
-                elif np.random.rand() <= self.add_zeros_quota:
+                # elif np.random.rand()<= self.add_zeros_quota:
 
-                    col_index = content_coordinates[index]
+                #     col_index = content_coordinates[index]
 
-                    self.row_list[num_samples] = row_index
-                    self.col_list[num_samples] = col_index
-                    self.data_list[num_samples] = 0.0
+                #     self.row_list[num_samples] = row_index
+                #     self.col_list[num_samples] = col_index
+                #     self.data_list[num_samples] = 0.0
 
                     num_samples += 1
-
-            if self.verbose and (time.time() - start_time_batch > 30 or num_samples == sim_mat_content.nnz*(1+self.add_zeros_quota)):
-
-                print(self.RECOMMENDER_NAME + ": Generating train data. Sample {} ( {:.2f} %) ".format(
-                    num_samples, num_samples/ sim_mat_content.nnz*(1+self.add_zeros_quota) *100))
-
-                sys.stdout.flush()
-                sys.stderr.flush()
-
-                start_time_batch = time.time()
-
-
-        self.write_log("Content S structure has {} out of {} ( {:.2f}%) nonzero collaborative cells".format(
-            num_common_coordinates, sim_mat_content.nnz, num_common_coordinates/sim_mat_content.nnz*100))
-
-        # Discarding extra cells
-        self.row_list = self.row_list[:num_samples]
-        self.col_list = self.col_list[:num_samples]
-        self.data_list = self.data_list[:num_samples]
-
-        data_nnz = sum(np.array(self.data_list)!=0) # number of non-zero cells in data_list
-        data_sum = sum(self.data_list)
-
-        collaborative_nnz = self.sim_matrix_target.nnz
-        collaborative_sum = sum(self.sim_matrix_target.data)
-
-        self.write_log("Nonzero collaborative cell sum is: {:.2E}, average is: {:.2E}, "
-                      "average over all collaborative data is {:.2E}".format(
-                      data_sum, data_sum/data_nnz, collaborative_sum/collaborative_nnz))
-
+            return num_samples        
 
     def write_log(self, string):
         if self.verbose:

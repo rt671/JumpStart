@@ -20,8 +20,25 @@ URM_train, URM_validation, URM_test = dataSplitter.get_holdout_split()
 
 # The ICM is a scipy.sparse matrix of shape |items|x|features|
 ICM = dataSplitter.get_ICM_from_name("ICM_genre")
+print("ICM:\n");
+print(ICM.toarray());
+print("URM:\n")
+print(URM_train.toarray());
 
-print(ICM);
+URM_train[1,5]=3
+URM_train[3,0]=4
+URM_train[4,3]=3
+URM_train[3,6]=4
+URM_train[1,7]=3
+URM_train[3,8]=4
+URM_train[3,9]=4
+URM_train[1,89]=3
+URM_train[3,800]=4
+URM_train[3,600]=4
+URM_train[1,711]=3
+URM_train[3,811]=4
+
+print(URM_train.toarray());
 
 # This contains the items to be ignored during the evaluation step
 # In a cold items setting this should contain the indices of the warm items
@@ -69,9 +86,9 @@ fw_parameters =  {'epochs': 5,
                   'topK': 100,
                   'use_dropout': True,
                   'dropout_perc': 0.7,
-                  'initialization_mode_D': 'random',
+                  'initialization_mode_D': 'one',
                   'positive_only_D': False,
-                  'normalize_similarity': True}
+                  'normalize_similarity': False}
 
 recommender_fw = Feature_Weighting(URM_train, ICM, similarity_collaborative)
 recommender_fw.fit(**fw_parameters,
