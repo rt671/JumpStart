@@ -6,6 +6,8 @@ from Base.Evaluation.Evaluator import EvaluatorHoldout
 # from Data_manager.Movielens_20m.Movielens20MReader import Movielens20MReader
 from Data_manager.Movielens_1m.Movielens1MReader import Movielens1MReader
 from Data_manager.DataSplitter_k_fold import DataSplitter_Warm_k_fold
+import scipy.sparse as sps
+
 
 dataReader = Movielens1MReader()
 
@@ -51,14 +53,14 @@ evaluator_test = EvaluatorHoldout(URM_test, cutoff_list=[5], ignore_items=ignore
 # ICM_target allows to set a different ICM for this validation step, providing flexibility in including
 # features present in either validation or test but not in train
 evaluator_validation_earlystopping = EvaluatorCFW_D_wrapper(evaluator_validation, ICM_target=ICM, model_to_use="last")
-
+firstTime=True;
 # We compute the similarity matrix resulting from a RP3beta recommender
 # Note that we have not included the code for parameter tuning, which should be done
-
 cf_parameters = {'topK': 500,
                  'alpha': 0.9,
                  'beta': 0.7,
-                 'normalize_similarity': True}
+                 'normalize_similarity': True,
+                 'firstTime':firstTime}
 
 recommender_collaborative = RP3betaRecommender(URM_train)
 recommender_collaborative.fit(**cf_parameters)
@@ -88,7 +90,8 @@ fw_parameters =  {'epochs': 5,
                   'dropout_perc': 0.7,
                   'initialization_mode_D': 'one',
                   'positive_only_D': False,
-                  'normalize_similarity': False}
+                  'normalize_similarity': False,
+                  'firstTime':firstTime}
 
 recommender_fw = Feature_Weighting(URM_train, ICM, similarity_collaborative)
 recommender_fw.fit(**fw_parameters,

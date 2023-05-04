@@ -261,14 +261,14 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
 
 
-        # if not self.allow_cold_users:
-        #     user_interactions = np.ediff1d(URM.indptr)
-        #     user_to_preserve = user_interactions >= self.n_folds
+        if not self.allow_cold_users:
+            user_interactions = np.ediff1d(URM.indptr)
+            user_to_preserve = user_interactions >= self.n_folds
 
-        #     print("DataSplitter_Warm: Removing {} of {} users because they have less interactions than the number of folds".format(
-        #          URM.shape[0] - user_to_preserve.sum(), URM.shape[0]))
+            print("DataSplitter_Warm: Removing {} of {} users because they have less interactions than the number of folds".format(
+                 URM.shape[0] - user_to_preserve.sum(), URM.shape[0]))
 
-        #     URM = URM[user_to_preserve,:]
+            URM = URM[user_to_preserve,:]
 
 
         self.n_users, self.n_items = URM.shape

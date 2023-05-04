@@ -69,7 +69,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             add_zeros_quota = -1.0,
             verbose = False,
             sgd_mode = 'adagrad', gamma = 0.9, beta_1 = 0.9, beta_2 = 0.999,
-            first_time=False,
+            firstTime=False,
             **earlystopping_kwargs):
 
         if initialization_mode_D not in self.INIT_TYPE_VALUES:
@@ -83,7 +83,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.epochs = epochs
         self.topK = topK
         self.verbose = verbose
-        self.first_time=first_time
+        self.firstTime=firstTime
 
         weights_initialization_D = None
 
@@ -181,7 +181,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         row_change_list=[3,5]
         # col_change_list=[]
-        if self.first_time == True :
+        if self.firstTime == True :
             for row_index in range(self.n_items):
                 num_samples=self.find_similar_items(row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
 

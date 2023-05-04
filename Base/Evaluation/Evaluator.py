@@ -98,8 +98,8 @@ def get_result_string(results_run, n_decimals=7):
 
         output_str += "CUTOFF: {} - ".format(cutoff)
 
-        # for metric in results_run_current_cutoff.keys():
-        #     output_str += "{}: {:.{n_decimals}f}, ".format(metric, results_run_current_cutoff[metric], n_decimals = n_decimals)
+        for metric in results_run_current_cutoff.keys():
+            output_str += "{}: {:.{n_decimals}f}, ".format(metric, results_run_current_cutoff[metric], n_decimals = n_decimals)
 
         output_str += "\n"
 
