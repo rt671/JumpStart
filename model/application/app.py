@@ -4,6 +4,12 @@ import bcrypt
 from dotenv import load_dotenv
 import os
 import movie_poster
+# from model import run_example
+# import sys
+# sys.path.append('/Users/varunjain/Desktop/Jumpstart-BTP/')
+# from model.run_example import getTopK
+# export PYTHONPATH=$PYTHONPATH:/Users/varunjain/Desktop/Jumpstart-BTP/model
+from gettopk import getTopK
 
 load_dotenv()
 
@@ -27,8 +33,12 @@ def home():
     if 'logged_in' not in session:
         return redirect(url_for('login'))
     if request.method == 'GET':
+        print("Home")
+        print(session['userId'])
         # Fetch movie data and store it in a list
-
+        userId = int(session['userId'])
+        result=getTopK(userId);
+        print(result)
         # top_K_list = [1,2,3] -> 'models output' 
         # for k in top_K_list:
         #     movie_name = DBcallById()
@@ -49,8 +59,6 @@ def home():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
-
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -93,6 +101,9 @@ def login():
             if bcrypt.checkpw(password, user['password']):
                 session['logged_in'] = True
                 session['email'] = email
+                session['userId']=str(user["userId"])
+                print("Login")
+                print(session['userId']);
                 return redirect(url_for('home'))
             else:
                 error = 'Invalid password'

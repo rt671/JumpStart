@@ -163,7 +163,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             # check the type and shape of the loaded matrix
             # print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
             # print(self.W_sparse.shape) 
-            rows_changed=[5,7,0,3,89,6,600,800,8,9];
+            rows_changed=[5,3];
             for current_row in rows_changed:
                 print(current_row);
                 similarity_block = d_t[current_row:current_row + 1, :] * Pui
