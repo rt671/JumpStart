@@ -111,7 +111,6 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     result_dict, result_string = evaluator_test.evaluateRecommender(recommender_collaborative)
     print("CF recommendation quality is: {}".format(result_string))
 
-
     # We get the similarity matrix
     # The similarity is a scipy.sparse matrix of shape |items|x|items|
     similarity_collaborative = recommender_collaborative.W_sparse.copy()

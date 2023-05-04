@@ -28,7 +28,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                                                                                         self.beta, self.min_rating, self.topK,
                                                                                         self.implicit, self.normalize_similarity)
 
-    def fit(self, alpha=1., beta=0.6, min_rating=0, topK=100, implicit=False, normalize_similarity=True,firstTime=True,):
+    def fit(self, item_id_array,alpha=1., beta=0.6, min_rating=0, topK=100, implicit=False, normalize_similarity=True,firstTime=True):
 
         self.alpha = alpha
         self.beta = beta
@@ -37,6 +37,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
         self.implicit = implicit
         self.normalize_similarity = normalize_similarity
         self.firstTime=firstTime;
+        self.rows_changed=item_id_array
 
         
         # if X.dtype != np.float32:
@@ -163,8 +164,8 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             # check the type and shape of the loaded matrix
             # print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
             # print(self.W_sparse.shape) 
-            rows_changed=[5,3];
-            for current_row in rows_changed:
+            # rows_changed=[5,3];
+            for current_row in self.rows_changed:
                 print(current_row);
                 similarity_block = d_t[current_row:current_row + 1, :] * Pui
                 similarity_block = similarity_block.toarray()
