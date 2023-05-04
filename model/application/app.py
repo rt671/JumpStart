@@ -37,13 +37,22 @@ def home():
         print(session['userId'])
         # Fetch movie data and store it in a list
         userId = int(session['userId'])
-        result=getTopK(userId);
-        print(result)
+        movie_ids=getTopK(userId);
+        print(movie_ids)
         # top_K_list = [1,2,3] -> 'models output' 
         # for k in top_K_list:
         #     movie_name = DBcallById()
-        movie_list = ["Batman", "The Avengers", "Toy Story"] # to be replaced by csv file
+        # movie_list = ["Batman", "The Avengers", "Toy Story"] # to be replaced by csv file
         # ratings = [null, 3, 4] # display ratings
+        # movie_ids = ["1","2","3","4"]
+        movie_list = []
+        for movie_id in movie_ids:
+            movie_id_str=str(movie_id);
+            movie = mongo.db.csvs.find_one({'movieId':movie_id_str})
+            movieName = str(movie["title"])
+            movieNameWithoutYear = movieName[:-6]
+            print(movieNameWithoutYear)
+            movie_list.append(movieNameWithoutYear)
 
         movies_data = []
         for movie_name in movie_list:

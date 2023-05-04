@@ -36,8 +36,8 @@ print(ICM.toarray());
 print("URM:\n")
 print(URM_train.toarray());
 
-def retrainModel(firstTime=False):
-
+def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
+    
     # URM_train[1,5]=3
     # URM_train[3,0]=4
     # URM_train[4,3]=3
@@ -80,7 +80,10 @@ def retrainModel(firstTime=False):
     # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["ICM"]
     # print(URM_train.toarray());
-
+    k=0;
+    for items in item_id_array:
+        URM_train[(user_id_updated,items)]=rating_array[k];
+        k=k+1;
     # This contains the items to be ignored during the evaluation step
     # In a cold items setting this should contain the indices of the warm items
     ignore_items = []
@@ -99,7 +102,8 @@ def retrainModel(firstTime=False):
                     'alpha': 0.9,
                     'beta': 0.7,
                     'normalize_similarity': True,
-                    'firstTime':firstTime}
+                    'firstTime':firstTime,
+                    'item_id_array':item_id_array}
 
     recommender_collaborative = RP3betaRecommender(URM_train)
     recommender_collaborative.fit(**cf_parameters)
@@ -143,7 +147,7 @@ def retrainModel(firstTime=False):
     result_dict, result_string = evaluator_test.evaluateRecommender(recommender_fw)
     print("CFeCBF recommendation quality is: {}".format(result_string))
 
-retrainModel();
+# retrainModel(user_id_updated,item_id_array,rating_array,True)
 
 res=getTopK(4);
 print(res)
