@@ -151,7 +151,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])), shape=(Pui.shape[1], Pui.shape[1]))
 
         else:
-            folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/matrices/"
+            folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices"
             file_name = self.RECOMMENDER_NAME
 
             # load the saved dictionary
@@ -161,8 +161,8 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = saved_dict["W_sparse"]
 
             # check the type and shape of the loaded matrix
-            print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
-            print(self.W_sparse.shape) 
+            # print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
+            # print(self.W_sparse.shape) 
             rows_changed=[5,7,0,3,89,6,600,800,8,9];
             for current_row in rows_changed:
                 print(current_row);
@@ -192,11 +192,9 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             # # print(self.W_sparse);
             # print(self.W_sparse.toarray());
 
-        print("RP3 beta-output:\n")
-            # print(self.W_sparse);
-        print(self.W_sparse.toarray(),"\n");
-        self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/matrices/")
-
+        # print("RP3 beta-output:\n")
+        #     # print(self.W_sparse);
+        # print(self.W_sparse.toarray(),"\n");
         if self.normalize_similarity:
             self.W_sparse = normalize(self.W_sparse, norm='l1', axis=1)
 
@@ -205,6 +203,8 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = similarityMatrixTopK(self.W_sparse, k=self.topK)
             
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
+        self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices")
+
 
     def saveModel(self, folder_path, file_name = None):
 

@@ -7,6 +7,7 @@ from CythonCompiler.run_compile_subprocess import run_compile_subprocess
 
 import time, sys
 import numpy as np
+import pickle
 
 class EvaluatorCFW_D_wrapper(object):
 
@@ -33,7 +34,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
     RECOMMENDER_NAME = "Feature_Weighted_Content_Based"
 
-    INIT_TYPE_VALUES = ["random", "one", "BM25", "TF-IDF"]
+    INIT_TYPE_VALUES = ["random", "one", "BM25", "TF-IDF","zero"]
 
     def __init__(self, URM_train, ICM, sim_matrix_target):
 
@@ -66,7 +67,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             l2_reg = 0.0,
             epochs = 50,
             topK = 300,
-            add_zeros_quota = -1.0,
+            add_zeros_quota = 0.0,
             verbose = False,
             sgd_mode = 'adagrad', gamma = 0.9, beta_1 = 0.9, beta_2 = 0.999,
             firstTime=False,
@@ -306,6 +307,8 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         self.W_sparse = self.similarity.compute_similarity()
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
+        self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/")
+
 
 
     def set_ICM_and_recompute_W(self, ICM_new, recompute_w = True):
@@ -314,3 +317,19 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         if recompute_w:
             self.compute_W_sparse(model_to_use = "best")
+
+    def saveModel(self, folder_path, file_name = None):
+
+        if file_name is None:
+            file_name = self.RECOMMENDER_NAME
+
+        print("{}: Saving model in file '{}'".format(self.RECOMMENDER_NAME, folder_path + file_name))
+
+        dictionary_to_save = {"W_sparse": self.W_sparse}
+
+
+        pickle.dump(dictionary_to_save,
+                    open(folder_path + file_name, "wb"),
+                    protocol=pickle.HIGHEST_PROTOCOL)
+
+        print("{}: Saving complete".format(self.RECOMMENDER_NAME))

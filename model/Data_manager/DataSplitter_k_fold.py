@@ -85,12 +85,12 @@ class DataSplitter_k_fold(DataSplitter):
             items_in_fold = self.fold_split[fold_index]["items_in_fold"]
 
 
-            print("\t Statistics for fold {}: n_interactions {} ( {:.2f}%), n_items {} ( {:.2f}%), density: {:.2E}".format(
-                fold_index,
-                URM_fold_object.nnz, URM_fold_object.nnz/n_global_interactions*100,
-                len(items_in_fold), len(items_in_fold)/n_items*100,
-                URM_fold_object.nnz/(int(n_items)*int(n_users))
-            ))
+            # print("\t Statistics for fold {}: n_interactions {} ( {:.2f}%), n_items {} ( {:.2f}%), density: {:.2E}".format(
+            #     fold_index,
+            #     URM_fold_object.nnz, URM_fold_object.nnz/n_global_interactions*100,
+            #     len(items_in_fold), len(items_in_fold)/n_items*100,
+            #     URM_fold_object.nnz/(int(n_items)*int(n_users))
+            # ))
 
         print("\n")
 
@@ -261,14 +261,14 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
 
 
-        if not self.allow_cold_users:
-            user_interactions = np.ediff1d(URM.indptr)
-            user_to_preserve = user_interactions >= self.n_folds
+        # if not self.allow_cold_users:
+        #     user_interactions = np.ediff1d(URM.indptr)
+        #     user_to_preserve = user_interactions >= self.n_folds
 
-            print("DataSplitter_Warm: Removing {} of {} users because they have less interactions than the number of folds".format(
-                 URM.shape[0] - user_to_preserve.sum(), URM.shape[0]))
+        #     print("DataSplitter_Warm: Removing {} of {} users because they have less interactions than the number of folds".format(
+        #          URM.shape[0] - user_to_preserve.sum(), URM.shape[0]))
 
-            URM = URM[user_to_preserve,:]
+        #     URM = URM[user_to_preserve,:]
 
 
         self.n_users, self.n_items = URM.shape
