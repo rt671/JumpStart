@@ -1,0 +1,43 @@
+# import csv
+
+# # Open the movies.dat file for reading
+# with open('movies.dat', 'r', encoding='iso-8859-1') as movies_file:
+
+#     # Open a new movies.csv file for writing
+#     with open('movies.csv', 'w', newline='') as csv_file:
+
+#         # Create a csv writer object
+#         writer = csv.writer(csv_file, delimiter=',')
+
+#         # Write the header row to the csv file
+#         writer.writerow(['MovieID', 'Title', 'Genres'])
+
+#         # Loop through each line in the movies.dat file
+#         for line in movies_file:
+
+#             # Split the line into its components
+#             movie_id, title, genres = line.strip().split('::')
+
+#             # Write the components to the csv file
+#             writer.writerow([movie_id, title, genres])
+
+# # # Open the ratings.dat file for reading
+# # with open('ratings.dat', 'r') as ratings_file:
+
+# #     # Open a new ratings.csv file for writing
+# #     with open('ratings.csv', 'w', newline='') as csv_file:
+
+# #         # Create a csv writer object
+# #         writer = csv.writer(csv_file, delimiter=',')
+
+# #         # Write the header row to the csv file
+# #         writer.writerow(['UserID', 'MovieID', 'Rating', 'Timestamp'])
+
+# #         # Loop through each line in the ratings.dat file
+# #         for line in ratings_file:
+
+# #             # Split the line into its components
+# #             user_id, movie_id, rating, timestamp = line.strip().split('::')
+
+# #             # Write the components to the csv file
+# #             writer.writerow([user_id, movie_id, rating, timestamp])

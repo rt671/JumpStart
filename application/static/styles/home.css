@@ -1,0 +1,68 @@
+/* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f1e3e3;
+    }
+    
+    /* Header styles */
+    header {
+    background-color: #333;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+    }
+    
+    /* Main styles */
+    main {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px;
+    }
+    
+    /* Movie container styles */
+    .movie-container {
+    background-color: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    margin: 20px 0;
+    width: calc(31.33% - 20px);
+    margin-right: 20px;
+    }
+    
+    .movie-container h2 {
+    margin: 0;
+    }
+    
+    .movie-container img {
+    max-width: 100%;
+    height: auto;
+    margin: 20px 0;
+    }
+    
+    /* Like/dislike form styles */
+    .like-dislike-form {
+    display: flex;
+    justify-content: center;
+    }
+    
+    .like-dislike-form input[type="radio"] {
+    display: none;
+    }
+    
+    .like-dislike-form label {
+    background-color: #eee;
+    border-radius: 5px;
+    color: #333;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 0 10px;
+    padding: 10px;
+    transition: background-color 0.3s ease-in-out;
+    }
+    
+    .like-dislike-form input[type="radio"]:checked + label {
+    background-color: #333;
+    color: #fff;
+    }
