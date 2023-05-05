@@ -1,3 +1,4 @@
+from model.run_example import retrainModel
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_pymongo import PyMongo
 import bcrypt
@@ -39,6 +40,9 @@ def home():
         userId = int(session['userId'])
         movie_ids=getTopK(userId);
         print(movie_ids)
+        result=retrainModel(userId,[2,4,8],[5,3,2])
+        print(result);
+        print()
         # top_K_list = [1,2,3] -> 'models output' 
         # for k in top_K_list:
         #     movie_name = DBcallById()
