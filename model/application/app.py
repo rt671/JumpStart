@@ -1,4 +1,4 @@
-from model.run_example import retrainModel
+from retrain_model import retrainModel
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from flask_pymongo import PyMongo
 import bcrypt
