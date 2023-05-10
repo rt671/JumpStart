@@ -5,15 +5,14 @@ import bcrypt
 from dotenv import load_dotenv
 import os
 import json
-# import movie_poster
-# import movie_poster
 import requests
 # from model import run_example
 # import sys
 # sys.path.append('/Users/varunjain/Desktop/Jumpstart-BTP/')
-# from model.run_example import getTopK
-# export PYTHONPATH=$PYTHONPATH:/Users/varunjain/Desktop/Jumpstart-BTP/model
+# path="/Users/varunjain/Desktop/Jumpstart-BTP/model"
 from gettopk import getTopK
+# export PYTHONPATH="$PYTHONPATH:/Users/varunjain/Desktop/Jumpstart-BTP/model"
+# from gettopk import getTopK
 
 load_dotenv()
 
