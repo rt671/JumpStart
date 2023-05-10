@@ -28,6 +28,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # URM_train[3,600]=4
     # URM_train[1,711]=3
     # URM_train[3,811]=4
+    print("Retrain running...")
     folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/"
     file_name = "URM_train"
 
@@ -36,6 +37,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["URM_train"]
+    print(URM_train)
     file_name = "URM_validation"
 
     # load the saved dictionary
@@ -59,9 +61,13 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     ICM = saved_dict["ICM"]
     # print(URM_train.toarray());
     k=0;
-    for items in item_id_array:
-        URM_train[(user_id_updated,items)]=rating_array[k];
-        k=k+1;
+    #print(URM_train.shape());
+    print(user_id_updated)
+    # print(rating_array);
+    print("ITEM-ID_ARRAY:")
+    print(item_id_array)
+    #     URM_train[(user_id_updated,items)]=rating_array[k];
+    #     k=k+1;
     # This contains the items to be ignored during the evaluation step
     # In a cold items setting this should contain the indices of the warm items
     ignore_items = []
@@ -99,7 +105,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # - The collaborative similarity matrix
     # Note that we have not included the code for parameter tuning, which should be done as those are just default parameters
 
-    fw_parameters =  {'epochs': 20,
+    fw_parameters =  {'epochs': 50,
                     'learning_rate': 0.0001,
                     'sgd_mode': 'adam',
                     'add_zeros_quota': 1.0,
@@ -108,7 +114,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
                     'topK': 100,
                     'use_dropout': True,
                     'dropout_perc': 0.7,
-                    'initialization_mode_D': 'zero',
+                    'initialization_mode_D': 'one',
                     'positive_only_D': False,
                     'normalize_similarity': False,
                     'firstTime':firstTime}
@@ -123,5 +129,4 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     result_dict, result_string = evaluator_test.evaluateRecommender(recommender_fw)
     print("CFeCBF recommendation quality is: {}".format(result_string))
-
     return getTopK(user_id_updated)

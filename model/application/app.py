@@ -41,31 +41,23 @@ def home():
         movie_ids=getTopK(userId);
         # movie_ids=[1,2,3,4]
         # print(movie_ids)
-        votes_cookie = request.cookies.get('votes')
-        if votes_cookie:
-            movie_ids = []
-            vote_values = []
-            votes = json.loads(votes_cookie)
-            for movie_id, vote_value in votes.items():
-                movie_ids.append(movie_id)
-                vote_values.append(vote_value)
-                print(f"Movie ID {movie_id}: Vote value {vote_value}")
-            result=retrainModel(userId,movie_ids,vote_values);
-            print(result);
+
         # print(result);
-    
+
         movies_data = []
         for movie_id in movie_ids:
             movie_id_str=str(movie_id);
             movie = mongo.db.csvs.find_one({'movieId':movie_id_str})
             movieName = str(movie["title"])
             movie_name_without_year = movieName[:-6]
+            # print(movie_name_without_year);
             movie_data = {}
             movie_data["title"] = movie_name_without_year
             movie_data["poster_path"] = get_movie_poster_url(movie_name_without_year)
             movie_data["movie_id"] = movie_id
             movies_data.append(movie_data)
 
+        retrain_model();
         # Render the home.html template and pass in the movie data
         return render_template("home.html", movies_data=movies_data)
 
@@ -162,6 +154,7 @@ def logout():
     session.pop('email',None)
     # session.pop('votes',None)
     response = make_response(redirect(url_for('login')))
+
     response.delete_cookie('votes')
     return response
 
@@ -199,6 +192,7 @@ def get_movie_poster_url(movie_name):
     response = requests.get(base_url, params={"apikey": api_key, "t": movie_name})
     data = response.json()
     poster_url = data["Poster"]
+    # print(poster_url);
     return poster_url
 
 
@@ -212,3 +206,17 @@ def print_session_detail():
         votes = json.loads(votes_cookie)
         for movie_id, vote_value in votes.items():
             print(f"Movie ID {movie_id}: Vote value {vote_value}")
+
+def retrain_model():
+    userId = int(session['userId'])
+    votes_cookie = request.cookies.get('votes')
+    if votes_cookie:
+        movie_ids = []
+        vote_values = []
+        votes = json.loads(votes_cookie)
+        for movie_id, vote_value in votes.items():
+            movie_ids.append(movie_id)
+            vote_values.append(vote_value)
+            print(f"Movie ID {movie_id}: Vote value {vote_value}")
+        result=retrainModel(userId,movie_ids,vote_values);
+        print(result);

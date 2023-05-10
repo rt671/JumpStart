@@ -165,14 +165,24 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             # print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
             # print(self.W_sparse.shape) 
             # rows_changed=[5,3];
+            print("ROWS-changed:")
+            print(self.rows_changed)
             for current_row in self.rows_changed:
                 print(current_row);
-                similarity_block = d_t[current_row:current_row + 1, :] * Pui
+                current_row=int(current_row);
+                # similarity_block = d_t[current_row:current_row + 1, :] * Pui
+                current_row=current_row-1;
+                print(type(current_row))
+                
+                
+                similarity_block = d_t[(current_row):(current_row + 1), :] * Pui
+                print(similarity_block);
                 similarity_block = similarity_block.toarray()
                 print(similarity_block);
                 # for row_in_block in range(block_dim):
+                # print(similarity_block);
                 row_data = np.multiply(similarity_block[0, :], degree)
-                print(row_data);
+                # print(row_data);
                 row_data[current_row] = 0
 
                 best = row_data.argsort()[::-1][:self.topK]
@@ -181,8 +191,8 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
 
                 values_to_add = row_data[best][notZerosMask]
                 cols_to_add = best[notZerosMask]
-                print(values_to_add);
-                print(cols_to_add);
+                # print(values_to_add);
+                # print(cols_to_add);
                 for idx in range(len(cols_to_add)):
                     self.W_sparse[current_row,cols_to_add[idx]]=values_to_add[idx];
 

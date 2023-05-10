@@ -80,10 +80,10 @@ print(URM_train.toarray());
 #     # extract the W_sparse matrix from the saved dictionary
 #     URM_train = saved_dict["ICM"]
 #     # print(URM_train.toarray());
-#     k=0;
-#     for items in item_id_array:
-#         URM_train[(user_id_updated,items)]=rating_array[k];
-#         k=k+1;
+#     # k=0;
+#     # for items in item_id_array:
+#     #     URM_train[(user_id_updated,items)]=rating_array[k];
+#     #     k=k+1;
 #     # This contains the items to be ignored during the evaluation step
 #     # In a cold items setting this should contain the indices of the warm items
 #     ignore_items = []
@@ -147,7 +147,7 @@ print(URM_train.toarray());
 #     print("CFeCBF recommendation quality is: {}".format(result_string))
 
 #     return getTopK(user_id_updated)
-# retrainModel(user_id_updated,item_id_array,rating_array,True)
+# retrainModel(2,[],[],True)
 
 res=getTopK(4);
 print(res)
