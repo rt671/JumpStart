@@ -14,7 +14,7 @@ import numpy as np
 import pickle
 
 
-def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
+def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=True):
 
     # URM_train[1,5]=3
     # URM_train[3,0]=4
@@ -66,8 +66,14 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # print(rating_array);
     print("ITEM-ID_ARRAY:")
     print(item_id_array)
-    #     URM_train[(user_id_updated,items)]=rating_array[k];
-    #     k=k+1;
+    print(rating_array);
+    for items in item_id_array:
+        items=int(items)-1;
+        URM_train[(user_id_updated,items)]=rating_array[k];
+        k=k+1;
+    print(URM_train.toarray());
+    saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_train","URM_train",URM_train)
+
     # This contains the items to be ignored during the evaluation step
     # In a cold items setting this should contain the indices of the warm items
     ignore_items = []
@@ -105,7 +111,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # - The collaborative similarity matrix
     # Note that we have not included the code for parameter tuning, which should be done as those are just default parameters
 
-    fw_parameters =  {'epochs': 50,
+    fw_parameters =  {'epochs': 20,
                     'learning_rate': 0.0001,
                     'sgd_mode': 'adam',
                     'add_zeros_quota': 1.0,
@@ -114,7 +120,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
                     'topK': 100,
                     'use_dropout': True,
                     'dropout_perc': 0.7,
-                    'initialization_mode_D': 'one',
+                    'initialization_mode_D': 'zero',
                     'positive_only_D': False,
                     'normalize_similarity': False,
                     'firstTime':firstTime}

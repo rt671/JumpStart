@@ -11,6 +11,7 @@ def getTopK(user_id):
     # extract the W_sparse matrix from the saved dictionary
     W_sparse = saved_dict["W_sparse"]
     W_dense=W_sparse.toarray();
+    print(W_dense);
     file_name = "URM_train"
 
     # load the saved dictionary
@@ -18,20 +19,51 @@ def getTopK(user_id):
 
     # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["URM_train"]
+    # URM_train[3,9]=5
+    # URM_train[2,9]=5
+    # URM_train[2,8]=5
+    # URM_train[4,9]=5
+    # URM_train[3,1]=0
+    # URM_train[4,0]=0
+    # URM_train[4,1]=0
+    
+    print("URM_train in topK:::")
+    print(URM_train.toarray());
     top_k = 6
     # num_users=5;
 
     # for user_id in range(num_users):
     user_history = URM_train[user_id, :]
     user_history_dense = user_history.toarray().flatten().astype(np.int32)
-    user_row = W_dense[user_history_dense, :].mean(axis=0)
+    user_row = W_dense[user_history_dense.nonzero()[0], :].mean(axis=0)
+
+    print(user_row);
 
     # Find top K similar items for each item in the user's history
+    # top_k_idx = []
+    # for i in user_history_dense:
+    #     idx = np.argsort(W_dense[:, i])[-top_k:]
+    #     top_k_idx.append(idx)
+
+    # # Combine indices and remove duplicates
+    # top_k_idx = np.unique(np.concatenate(top_k_idx))
+
+    # # Sort by decreasing order of similarity scores
+    # sorted_idx = np.argsort(W_dense[top_k_idx, :].dot(user_row))[::-1]
+
+    # # Return top K items
+    # top_k_items = top_k_idx[sorted_idx[:top_k]]+1
+
+    # # print("Top K items for user", user_id, ":", top_k_items)
+    # # print("\n")
+    # 
     top_k_idx = []
+    print(user_history_dense.nonzero()[0]);
     for i in user_history_dense:
         idx = np.argsort(W_dense[:, i])[-top_k:]
         top_k_idx.append(idx)
 
+    # top_k_idx.append(user_history_dense.nonzero()[0])
     # Combine indices and remove duplicates
     top_k_idx = np.unique(np.concatenate(top_k_idx))
 
@@ -41,6 +73,4 @@ def getTopK(user_id):
     # Return top K items
     top_k_items = top_k_idx[sorted_idx[:top_k]]+1
 
-    # print("Top K items for user", user_id, ":", top_k_items)
-    # print("\n")
     return top_k_items

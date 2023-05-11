@@ -59,7 +59,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
     def fit(self, precompute_common_features = False,
             learning_rate = 0.1,
             positive_only_D = True,
-            initialization_mode_D ="random",
+            initialization_mode_D ="zero",
             normalize_similarity = False,
             use_dropout = True,
             dropout_perc = 0.3,
@@ -70,7 +70,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             add_zeros_quota = 0.0,
             verbose = False,
             sgd_mode = 'adagrad', gamma = 0.9, beta_1 = 0.9, beta_2 = 0.999,
-            firstTime=False,
+            firstTime=True,
             **earlystopping_kwargs):
 
         if initialization_mode_D not in self.INIT_TYPE_VALUES:
@@ -180,7 +180,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         num_samples = 0
 
-        row_change_list=[3,5]
+        # row_change_list=[3,5]
         # col_change_list=[]
         if self.firstTime == True :
             for row_index in range(self.n_items):
