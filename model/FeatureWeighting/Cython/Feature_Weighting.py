@@ -56,7 +56,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.n_features = self.ICM.shape[1]
 
 
-    def fit(self, precompute_common_features = False,
+    def fit(self,item_id_array, precompute_common_features = False,
             learning_rate = 0.1,
             positive_only_D = True,
             initialization_mode_D ="zero",
@@ -70,7 +70,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             add_zeros_quota = 0.0,
             verbose = False,
             sgd_mode = 'adagrad', gamma = 0.9, beta_1 = 0.9, beta_2 = 0.999,
-            firstTime=True,
+            firstTime=False,
             **earlystopping_kwargs):
 
         if initialization_mode_D not in self.INIT_TYPE_VALUES:
@@ -85,6 +85,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.topK = topK
         self.verbose = verbose
         self.firstTime=firstTime
+        self.rows_changed=item_id_array
 
         weights_initialization_D = None
 
@@ -188,8 +189,8 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         else:
             # array  of rows and array of columns
-            for row_index in row_change_list:
-                num_samples=self.find_similar_items(row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
+            for row_index in self.rows_changed:
+                num_samples=self.find_similar_items(int(row_index)-1,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
             # for col_index in col_change_list:
             #     num_samples=self.find_similar_items(col_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples)
 

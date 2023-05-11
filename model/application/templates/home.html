@@ -2,29 +2,40 @@
 <html>
 
     <head>
-        <title>Movie Recommendation System</title>
+        <title>JumpStart</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/home.css') }}">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="{{ url_for('static', filename='js/ajax.js') }}"></script>
     </head>
 
-    <body>
-        <h1>Movie Recommendation System</h1>
+    <body
+        style="background: linear-gradient(90deg, #C7C5F4, #776BCC); border: 2px solid white; padding: 30px; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; border-radius: 10px;">
+        <h1 style="margin: 10px; text-align: center;">JumpStart</h1>
         <form method="POST" action="/logout">
-            <div>
-                <button type="submit">Logout</button>
+            <div style="text-align: right;">
+                <button
+                    style="margin-right: 40px; padding: 10px; border-radius: 5px; background-color: #afa7ee; font-size: large;"
+                    type="submit">Logout</button>
             </div>
         </form>
-        {% for movie in movies_data %}
-        <div class="movie">
-            <h2>{{ movie["title"] }}</h2>
-            <img src="{{movie["poster_path"] }}" alt="{{ movie["title"] }} poster">
-            <form>
-                <input type="radio" name="{{ movie["movie_id"] }}" value="like"> Like
-                <input type="radio" name="{{ movie["movie_id"] }}" value="dislike"> Dislike
-            </form>
+        <div style="display: flex; flex-wrap: wrap;">
+            {% for movie in movies_data %}
+            <div style="margin: 3px; border: 1px solid white; width: 32%; text-align: center; border-radius: 10px; background: linear-gradient(0deg, #C7C5F4, #776BCC);"
+                class="movie mov">
+                <h2 style="text-align: center;">{{ movie["title"] }}</h2>
+                <img style="text-align: center;height:73%;" src="{{ movie["poster_path"] }}" alt="{{ movie["title"] }} poster">
+                <form>
+                    <!-- <div -->
+                        <!-- style="border-radius: 10px; margin: 10px; background-color:white; margin-left: 30%; margin-right: 30%; padding: 6px;"> -->
+                        <input type="radio" name="{{ movie["movie_id"] }}" value="like"> <span
+                            style="color: lightseagreen;">Like</span>
+                        <input type="radio" name="{{ movie["movie_id"] }}" value="dislike"> <span
+                            style="color: #ff0e0e;">Dislike</span>
+                    <!-- </div> -->
+                </form>
+            </div>
+            {% endfor %}
         </div>
-        {% endfor %}
     </body>
 
 </html>

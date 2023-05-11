@@ -14,7 +14,7 @@ import numpy as np
 import pickle
 
 
-def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=True):
+def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     # URM_train[1,5]=3
     # URM_train[3,0]=4
@@ -123,7 +123,8 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=True):
                     'initialization_mode_D': 'zero',
                     'positive_only_D': False,
                     'normalize_similarity': False,
-                    'firstTime':firstTime}
+                    'firstTime':firstTime,
+                    'item_id_array':item_id_array}
 
     recommender_fw = Feature_Weighting(URM_train, ICM, similarity_collaborative)
     recommender_fw.fit(**fw_parameters,

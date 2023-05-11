@@ -1,18 +1,48 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Sign Up</title>
-</head>
-<body>
-    <h1>Sign Up</h1>
-    <form method="post" action="{{ url_for('signup') }}">
-        <label>Name</label>
-        <input type="text" name="name" required>
-        <label>Email</label>
-        <input type="email" name="email" required>
-        <label>Password</label>
-        <input type="password" name="password" required>
-        <input type="submit" value="Sign Up">
-    </form>
-</body>
+
+    <head>
+        <title>Sign Up</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/register.css') }}">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="screen">
+                <div class="screen__content">
+                    <h1 class="heading">JUMPSTART</h1>
+                    <form method="POST" class="login">
+                        <div class="login__field">
+                            <i class="login__icon fas fa-user"></i>
+                            <label for="email"></label>
+                            <input type="text" name="name" id="name" class="login__input" placeholder="Name">
+                        </div>
+                        <div class="login__field">
+                            <i class="login__icon fas fa-user"></i>
+                            <label for="email"></label>
+                            <input type="email" name="email" id="email" class="login__input" placeholder="Email">
+                        </div>
+                        <div class="login__field">
+                            <i class="login__icon fas fa-lock"></i>
+                            <label for="password"></label>
+                            <input type="password" id="password" name="password" class="login__input"
+                                placeholder="Password">
+                        </div>
+                        <button type="submit" class="button login__submit">
+                            <span class="button__text">Sign up</span>
+                            <i class="button__icon fas fa-chevron-right"></i>
+                        </button>
+                        <div class="subtext">Already signed up? <a class="anchor" href="login">Login</a></div>
+                    </form>
+                </div>
+                <div class="screen__background">
+                    <span class="screen__background__shape screen__background__shape4"></span>
+                    <span class="screen__background__shape screen__background__shape3"></span>
+                    <span class="screen__background__shape screen__background__shape2"></span>
+                    <span class="screen__background__shape screen__background__shape1"></span>
+                </div>
+            </div>
+        </div>
+    </body>
+
 </html>

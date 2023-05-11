@@ -38,12 +38,16 @@ def home():
     if request.method == 'GET':
         print_session_detail()
         userId = int(session['userId'])
-        movie_ids=getTopK(userId);
+        # movie_ids=getTopK(userId);
         # movie_ids=[1,2,3,4]
-        # print(movie_ids)
 
         # print(result);
-
+        movie_ids=retrain_model();
+        print(len(movie_ids))
+        
+        if len(movie_ids)==0:
+            movie_ids=getTopK(userId);
+            print(movie_ids);
         movies_data = []
         for movie_id in movie_ids:
             movie_id_str=str(movie_id);
@@ -57,7 +61,6 @@ def home():
             movie_data["movie_id"] = movie_id
             movies_data.append(movie_data)
 
-        retrain_model();
         # Render the home.html template and pass in the movie data
         return render_template("home.html", movies_data=movies_data)
 
@@ -120,6 +123,8 @@ def login():
 @app.route('/vote', methods=['POST'])
 def vote():
     data = request.get_json()
+    print(data['movie_id'])
+    print (type((data['movie_id'])))
     movie_id = int(data['movie_id'])
     vote_value = int(data['vote_value'])
     # do something with the vote data, like updating a database
@@ -220,3 +225,4 @@ def retrain_model():
             print(f"Movie ID {movie_id}: Vote value {vote_value}")
         result=retrainModel(userId,movie_ids,vote_values);
         print(result);
+        return result
