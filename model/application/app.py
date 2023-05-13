@@ -6,6 +6,8 @@ from dotenv import load_dotenv
 import os
 import json
 import requests
+import re
+import numpy as np
 # from model import run_example
 # import sys
 # sys.path.append('/Users/varunjain/Desktop/Jumpstart-BTP/')
@@ -43,18 +45,28 @@ def home():
 
         # print(result);
         movie_ids=retrain_model();
-        print(len(movie_ids))
+        # print(len(movie_ids))
         
-        if len(movie_ids)==0:
-            movie_ids=getTopK(userId);
-            print(movie_ids);
+        # if len(movie_ids)==0:
+        movie_ids=getTopK(userId);
+        print(movie_ids);
         movies_data = []
         for movie_id in movie_ids:
+            print(movie_id)
+            # value = np.int64(movie_id)
+            # value_as_int = int(value)
             movie_id_str=str(movie_id);
-            movie = mongo.db.csvs.find_one({'movieId':movie_id_str})
+            movie = mongo.db.movies.find_one({'movieId':movie_id_str})
+            print(movie)
+            print(type(movie))
             movieName = str(movie["title"])
-            movie_name_without_year = movieName[:-6]
+            print(movieName)
+            # movie_name_without_year = movieName[:-6]
+            # Remove the year from the movie name
+            movie_name_without_year = re.sub(r'\(\d+\)$', '', movieName).strip()
             # print(movie_name_without_year);
+            movie_name_without_year=correct_movie_name(movie_name_without_year);
+            print(movie_name_without_year);
             movie_data = {}
             movie_data["title"] = movie_name_without_year
             movie_data["poster_path"] = get_movie_poster_url(movie_name_without_year)
@@ -196,8 +208,10 @@ api_key = os.getenv("OMDB_API_KEY")
 def get_movie_poster_url(movie_name):
     response = requests.get(base_url, params={"apikey": api_key, "t": movie_name})
     data = response.json()
+    # print(data)
+    if(data["Response"] == "False" or "Poster" not in data or data["Poster"] == "N/A"):
+        return "https://upload.wikimedia.org/wikipedia/commons/6/64/Poster_not_available.jpg"
     poster_url = data["Poster"]
-    # print(poster_url);
     return poster_url
 
 
@@ -226,3 +240,14 @@ def retrain_model():
         result=retrainModel(userId,movie_ids,vote_values);
         print(result);
         return result
+
+def correct_movie_name(movie_name):
+    
+    movie_name_array = movie_name.split(',')
+    if(len(movie_name_array)==1):
+        return movie_name
+    # print(movie_name_array)
+    if(movie_name_array[1] == " The" or movie_name_array[1] == " A" or movie_name_array[1] == " An"):
+        return (movie_name_array[1] + ' ' + movie_name_array[0])
+    else: 
+        return movie_name

@@ -29,7 +29,7 @@ def getTopK(user_id):
     
     print("URM_train in topK:::")
     print(URM_train.toarray());
-    top_k = 6
+    top_k = 15
     # num_users=5;
 
     # for user_id in range(num_users):
@@ -39,24 +39,6 @@ def getTopK(user_id):
 
     print(user_row);
 
-    # Find top K similar items for each item in the user's history
-    # top_k_idx = []
-    # for i in user_history_dense:
-    #     idx = np.argsort(W_dense[:, i])[-top_k:]
-    #     top_k_idx.append(idx)
-
-    # # Combine indices and remove duplicates
-    # top_k_idx = np.unique(np.concatenate(top_k_idx))
-
-    # # Sort by decreasing order of similarity scores
-    # sorted_idx = np.argsort(W_dense[top_k_idx, :].dot(user_row))[::-1]
-
-    # # Return top K items
-    # top_k_items = top_k_idx[sorted_idx[:top_k]]+1
-
-    # # print("Top K items for user", user_id, ":", top_k_items)
-    # # print("\n")
-    # 
     top_k_idx = []
     print(user_history_dense.nonzero()[0]);
     for i in user_history_dense:

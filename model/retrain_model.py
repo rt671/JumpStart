@@ -16,18 +16,6 @@ import pickle
 
 def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
-    # URM_train[1,5]=3
-    # URM_train[3,0]=4
-    # URM_train[4,3]=3
-    # URM_train[3,6]=4
-    # URM_train[1,7]=3
-    # URM_train[3,8]=4
-    # URM_train[3,9]=4
-    # URM_train[1,89]=3
-    # URM_train[3,800]=4
-    # URM_train[3,600]=4
-    # URM_train[1,711]=3
-    # URM_train[3,811]=4
     print("Retrain running...")
     folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/"
     file_name = "URM_train"
@@ -111,7 +99,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # - The collaborative similarity matrix
     # Note that we have not included the code for parameter tuning, which should be done as those are just default parameters
 
-    fw_parameters =  {'epochs': 20,
+    fw_parameters =  {'epochs': 5,
                     'learning_rate': 0.0001,
                     'sgd_mode': 'adam',
                     'add_zeros_quota': 1.0,

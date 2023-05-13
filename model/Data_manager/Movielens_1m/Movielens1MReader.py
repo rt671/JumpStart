@@ -18,7 +18,7 @@ import csv
 class Movielens1MReader(DataReader):
 
     # DATASET_URL = "http://files.grouplens.org/datasets/movielens/ml-1m.zip"
-    DATASET_SUBFOLDER = "ml-10-new/"
+    DATASET_SUBFOLDER = "Movielens_1m/"
     AVAILABLE_ICM = ["ICM_genre"]
 
     IS_IMPLICIT = True
@@ -38,7 +38,7 @@ class Movielens1MReader(DataReader):
 
         print("Movielens1MReader: Loading original data")
 
-        zipFile_path = "/Users/varunjain/Desktop/ml-10.zip"
+        zipFile_path = "/Users/varunjain/Desktop/ml-1m_changed.zip"
 
         try:
 
@@ -51,7 +51,7 @@ class Movielens1MReader(DataReader):
 
             # downloadFromURL(self.DATASET_URL, zipFile_path, "ml-1m.zip")
 
-            dataFile = zipfile.ZipFile("/Users/varunjain/Desktop/ml-10.zip")
+            dataFile = zipfile.ZipFile("/Users/varunjain/Desktop/ml-1m_changed.zip")
         
         print("READING DATASET...\n")
         genres_path = dataFile.extract("movies.csv", path=zipFile_path + "decompressed/")
