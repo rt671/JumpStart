@@ -13,7 +13,6 @@ import scipy.sparse as sps
 import numpy as np
 import pickle
 
-
 def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     print("Retrain running...")
@@ -25,7 +24,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["URM_train"]
-    print(URM_train)
+    # print(URM_train)
     file_name = "URM_validation"
 
     # load the saved dictionary
@@ -59,7 +58,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
         items=int(items)-1;
         URM_train[(user_id_updated,items)]=rating_array[k];
         k=k+1;
-    print(URM_train.toarray());
+    # print(URM_train.toarray());
     saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_train","URM_train",URM_train)
 
     # This contains the items to be ignored during the evaluation step
@@ -86,8 +85,8 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     recommender_collaborative = RP3betaRecommender(URM_train)
     recommender_collaborative.fit(**cf_parameters)
 
-    result_dict, result_string = evaluator_test.evaluateRecommender(recommender_collaborative)
-    print("CF recommendation quality is: {}".format(result_string))
+    # result_dict, result_string = evaluator_test.evaluateRecommender(recommender_collaborative)
+    # print("CF recommendation quality is: {}".format(result_string))
 
     # We get the similarity matrix
     # The similarity is a scipy.sparse matrix of shape |items|x|items|
@@ -124,4 +123,8 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
 
     result_dict, result_string = evaluator_test.evaluateRecommender(recommender_fw)
     print("CFeCBF recommendation quality is: {}".format(result_string))
-    return getTopK(user_id_updated)
+    # print(item_id_array);
+    # for idx in item_id_array:
+        
+    ans=getTopK(user_id_updated,item_id_array)
+    return ans;

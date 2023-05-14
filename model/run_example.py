@@ -1,6 +1,5 @@
 from Collaborative_Filtering.RP3betaRecommender import RP3betaRecommender
 from FeatureWeighting.Cython.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
-
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 
 # from Data_manager.Movielens_20m.Movielens20MReader import Movielens20MReader
@@ -27,9 +26,9 @@ saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_train","
 saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_validation","URM_validation",URM_validation)
 saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_test","URM_test",URM_test)
 
-
 # The ICM is a scipy.sparse matrix of shape |items|x|features|
 ICM = dataSplitter.get_ICM_from_name("ICM_genre")
+print(ICM.shape);
 saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","ICM","ICM",ICM)
 
 # print("ICM:\n");

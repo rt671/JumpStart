@@ -130,7 +130,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.D_incremental = self.FW_D_Similarity.get_weights()
         self.D_best = self.D_incremental.copy()
 
-        self._train_with_early_stopping(epochs,
+        self._train_with_early_stopping(epochs,firstTime=firstTime,
                                         algorithm_name = self.RECOMMENDER_NAME,
                                         **earlystopping_kwargs)
 

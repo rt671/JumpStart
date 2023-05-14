@@ -162,13 +162,11 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             print("ROWS-changed:")
             print(self.rows_changed)
             for current_row in self.rows_changed:
-                # print(current_row);
+                print(current_row);
                 current_row=int(current_row);
                 # similarity_block = d_t[current_row:current_row + 1, :] * Pui
                 current_row=current_row-1;
                 # print(type(current_row))
-                
-                
                 similarity_block = d_t[(current_row):(current_row + 1), :] * Pui
                 # print(similarity_block);
                 similarity_block = similarity_block.toarray()
@@ -180,7 +178,6 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                 row_data[current_row] = 0
 
                 best = row_data.argsort()[::-1][:self.topK]
-
                 notZerosMask = row_data[best] != 0.0
 
                 values_to_add = row_data[best][notZerosMask]
@@ -190,16 +187,13 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                 for idx in range(len(cols_to_add)):
                     self.W_sparse[current_row,cols_to_add[idx]]=values_to_add[idx];
 
+
             # self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/matrices/")
 
             # self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])), shape=(Pui.shape[1], Pui.shape[1]))
             # print("RP3 beta-output:\n")
             # # print(self.W_sparse);
             # print(self.W_sparse.toarray());
-
-        # print("RP3 beta-output:\n")
-        #     # print(self.W_sparse);
-        # print(self.W_sparse.toarray(),"\n");
         if self.normalize_similarity:
             self.W_sparse = normalize(self.W_sparse, norm='l1', axis=1)
 
@@ -208,6 +202,27 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = similarityMatrixTopK(self.W_sparse, k=self.topK)
             
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
+        W_dense=self.W_sparse.toarray();
+        # print(W_dense[0]);
+        # print("IIM-Collab:")
+        # for rows in self.rows_changed:
+        #     row=int(rows);
+        #     print(row);
+        #     print(W_dense[row]);
+        #     # for idx in range(len(W_dense[row])):
+        #     #     if(W_dense[row][idx]!=0):
+        #     #         print(idx,W_dense[row][idx]);
+        #     # print("\n");
+        #     sorted_indices = sorted(range(len(W_dense[row])), key=lambda idx: W_dense[row][idx], reverse=True)
+        #     length=0;
+        #     for idx in sorted_indices:
+        #         if W_dense[row][idx] != 0:
+        #             length+=1;
+        #             print(idx, W_dense[row][idx])
+        #             if(length>30):
+        #                 break;
+        #     print("\n")
+        # print(self.W_sparse.toarray());
         self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices")
 
 

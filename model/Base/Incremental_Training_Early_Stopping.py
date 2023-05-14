@@ -92,7 +92,7 @@ class Incremental_Training_Early_Stopping(object):
     def _train_with_early_stopping(self, epochs_max, epochs_min = 0,
                                    validation_every_n = None, stop_on_validation = False,
                                    validation_metric = None, lower_validations_allowed = None, evaluator_object = None,
-                                   algorithm_name = "Incremental_Training_Early_Stopping"):
+                                   algorithm_name = "Incremental_Training_Early_Stopping",firstTime=False):
         """
 
         :param epochs_max:                  max number of epochs the training will last
@@ -246,10 +246,10 @@ class Incremental_Training_Early_Stopping(object):
             elapsed_time = time.time() - start_time
             new_time_value, new_time_unit = seconds_to_biggest_unit(elapsed_time)
 
-            if evaluator_object is not None:
-                print("{}: Terminating at epoch {}. Best value for '{}' at epoch {} is {:.4f}. Elapsed time {:.2f} {}".format(
-                    algorithm_name, epochs_current, validation_metric, self.epochs_best, self.best_validation_metric, new_time_value, new_time_unit))
-            else:
-                print("{}: Terminating at epoch {}. Elapsed time {:.2f} {}".format(
-                    algorithm_name, epochs_current, new_time_value, new_time_unit))
+            # if evaluator_object is not None:
+            #     print("{}: Terminating at epoch {}. Best value for '{}' at epoch {} is {:.4f}. Elapsed time {:.2f} {}".format(
+            #         algorithm_name, epochs_current, validation_metric, self.epochs_best, self.best_validation_metric, new_time_value, new_time_unit))
+            # else:
+            #     print("{}: Terminating at epoch {}. Elapsed time {:.2f} {}".format(
+            #         algorithm_name, epochs_current, new_time_value, new_time_unit))
 

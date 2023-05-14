@@ -38,6 +38,7 @@ def home():
     if 'logged_in' not in session or session['logged_in'] == False:
         return redirect(url_for('login'))
     if request.method == 'GET':
+        session['refreshed'] = True
         print_session_detail()
         userId = int(session['userId'])
         # movie_ids=getTopK(userId);
@@ -47,8 +48,8 @@ def home():
         movie_ids=retrain_model();
         # print(len(movie_ids))
         
-        # if len(movie_ids)==0:
-        movie_ids=getTopK(userId);
+        # if movie_ids.any()==None:
+        #     movie_ids=getTopK(userId);
         print(movie_ids);
         movies_data = []
         for movie_id in movie_ids:
@@ -78,7 +79,6 @@ def home():
 
         # Render the home.html template and pass in the movie data
         return render_template("home.html", movies_data=movies_data)
-
 
 
 @app.route('/signup', methods=['GET', 'POST'])
@@ -146,9 +146,13 @@ def vote():
 
     # Get the votes dictionary from the cookie or create a new one if it doesn't exist
     votes_cookie = request.cookies.get('votes')
-    if votes_cookie:
+    if session['refreshed']==True:
+          session['refreshed']=False;
+          votes = {}
+    elif votes_cookie:
         votes = json.loads(votes_cookie)
     else:
+        session['refreshed']=False;
         votes = {}
 
     # Update the votes dictionary with the new vote
@@ -156,7 +160,6 @@ def vote():
     # print(votes[movie_id])
     # print(len(votes))
     
-
     # Save the updated votes dictionary to a cookie and return a response
     response = make_response('OK')
     response.set_cookie('votes', value=json.dumps(votes))
@@ -230,6 +233,7 @@ def print_session_detail():
             print(f"Movie ID {movie_id}: Vote value {vote_value}")
 
 def retrain_model():
+    print("in retrain")
     userId = int(session['userId'])
     votes_cookie = request.cookies.get('votes')
     if votes_cookie:
@@ -243,6 +247,9 @@ def retrain_model():
         result=retrainModel(userId,movie_ids,vote_values);
         print(result);
         return result
+    else:
+        result=getTopK(userId);
+        return result;
 
 def correct_movie_name(movie_name):
     

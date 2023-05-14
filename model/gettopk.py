@@ -1,7 +1,9 @@
 import pickle
 import numpy as np
+import random
+from iim_collab import iim
 
-def getTopK(user_id):
+def getTopK(user_id,item_id_array):
     folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/"
     file_name = "Feature_Weighted_Content_Based"
 
@@ -19,13 +21,6 @@ def getTopK(user_id):
 
     # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["URM_train"]
-    # URM_train[3,9]=5
-    # URM_train[2,9]=5
-    # URM_train[2,8]=5
-    # URM_train[4,9]=5
-    # URM_train[3,1]=0
-    # URM_train[4,0]=0
-    # URM_train[4,1]=0
     
     print("URM_train in topK:::")
     print(URM_train.toarray());
@@ -54,5 +49,6 @@ def getTopK(user_id):
 
     # Return top K items
     top_k_items = top_k_idx[sorted_idx[:top_k]]+1
-
+    print(top_k_items);
+    iim(item_id_array,top_k_items);
     return top_k_items
