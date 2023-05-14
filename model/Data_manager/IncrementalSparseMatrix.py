@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 09/09/2018
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 
 import scipy.sparse as sps
 

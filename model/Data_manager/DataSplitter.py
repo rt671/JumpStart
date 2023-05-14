@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 30/11/18
-
-@author: Maurizio Ferrari Dacrema
-"""
 
 import traceback, os
 

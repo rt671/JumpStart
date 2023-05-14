@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 12/01/18
-
-@author: Maurizio Ferrari Dacrema
-"""
 
 import scipy.sparse as sps
 import numpy as np

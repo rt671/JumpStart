@@ -50,8 +50,8 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         #     raise ValueError("Number of items not consistent. S_matrix contains {} but ICM contains {}".format(sim_matrix_target.shape[0], ICM.shape[0]))
 
         self.sim_matrix_target = check_matrix(sim_matrix_target, 'csr')
-        print("SIM_MAT_TARGET:")
-        print(sim_matrix_target.toarray());
+        # print("SIM_MAT_TARGET:")
+        # print(sim_matrix_target.toarray());
         self.ICM = check_matrix(ICM, 'csr')
         self.n_features = self.ICM.shape[1]
 
@@ -158,8 +158,8 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.similarity = Compute_Similarity(self.ICM.T, shrink=0, topK=self.topK, normalize=False)
         sim_mat_content = self.similarity.compute_similarity()
         sim_mat_content = check_matrix(sim_mat_content, "csr")
-        print("SIM_MAT_CONTENT:")
-        print(sim_mat_content.toarray());
+        # print("SIM_MAT_CONTENT:")
+        # print(sim_mat_content.toarray());
 
         self.write_log("Collaborative S density: {:.2E}, nonzero cells {}".format(
             self.sim_matrix_target.nnz/self.sim_matrix_target.shape[0]**2, self.sim_matrix_target.nnz))

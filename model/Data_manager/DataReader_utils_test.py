@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 03/03/18
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 import unittest
 
 import numpy as np

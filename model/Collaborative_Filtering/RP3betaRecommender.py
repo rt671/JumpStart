@@ -1,9 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@author: Cesare Bernardis
-"""
-
 import numpy as np
 import scipy.sparse as sps
 import pickle
@@ -168,17 +162,17 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             print("ROWS-changed:")
             print(self.rows_changed)
             for current_row in self.rows_changed:
-                print(current_row);
+                # print(current_row);
                 current_row=int(current_row);
                 # similarity_block = d_t[current_row:current_row + 1, :] * Pui
                 current_row=current_row-1;
-                print(type(current_row))
+                # print(type(current_row))
                 
                 
                 similarity_block = d_t[(current_row):(current_row + 1), :] * Pui
-                print(similarity_block);
+                # print(similarity_block);
                 similarity_block = similarity_block.toarray()
-                print(similarity_block);
+                # print(similarity_block);
                 # for row_in_block in range(block_dim):
                 # print(similarity_block);
                 row_data = np.multiply(similarity_block[0, :], degree)

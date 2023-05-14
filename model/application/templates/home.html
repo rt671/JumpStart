@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
     <head>
         <title>JumpStart</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/home.css') }}">
@@ -24,6 +23,13 @@
                 class="movie mov">
                 <h2 style="text-align: center;">{{ movie["title"] }}</h2>
                 <img style="text-align: center;height:73%; width:70%;" src="{{ movie["poster_path"] }}" alt="{{ movie["title"] }} poster">
+                <!-- <p style="text-align: center;">Genres: {{ movie["genres"] }}</p> -->
+                <p style="text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Genres:
+                    {% for genre in movie["genres"] %}
+                    {% if not loop.first %}, {% endif %}
+                    {{ genre }}
+                    {% endfor %}
+                </p>
                 <form>
                     <!-- <div -->
                         <!-- style="border-radius: 10px; margin: 10px; background-color:white; margin-left: 30%; margin-right: 30%; padding: 6px;"> -->

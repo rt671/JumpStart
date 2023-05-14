@@ -53,14 +53,16 @@ def home():
         movies_data = []
         for movie_id in movie_ids:
             print(movie_id)
-            # value = np.int64(movie_id)
-            # value_as_int = int(value)
             movie_id_str=str(movie_id);
             movie = mongo.db.movies.find_one({'movieId':movie_id_str})
             print(movie)
             print(type(movie))
             movieName = str(movie["title"])
             print(movieName)
+            genres=movie["genres"];
+            print(genres);
+            movie_genres = genres.split('|')
+            print(movie_genres)
             # movie_name_without_year = movieName[:-6]
             # Remove the year from the movie name
             movie_name_without_year = re.sub(r'\(\d+\)$', '', movieName).strip()
@@ -71,6 +73,7 @@ def home():
             movie_data["title"] = movie_name_without_year
             movie_data["poster_path"] = get_movie_poster_url(movie_name_without_year)
             movie_data["movie_id"] = movie_id
+            movie_data["genres"]=movie_genres
             movies_data.append(movie_data)
 
         # Render the home.html template and pass in the movie data

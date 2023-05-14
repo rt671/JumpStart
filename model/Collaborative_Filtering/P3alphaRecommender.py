@@ -1,8 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-@author: Cesare Bernardis
-"""
 
 import numpy as np
 import scipy.sparse as sps
