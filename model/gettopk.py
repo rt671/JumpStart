@@ -3,7 +3,7 @@ import numpy as np
 import random
 from iim_collab import iim
 
-def getTopK(user_id,item_id_array):
+def getTopK(user_id,item_id_array=[]):
     folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/"
     file_name = "Feature_Weighted_Content_Based"
 

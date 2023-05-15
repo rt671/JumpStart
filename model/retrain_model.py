@@ -54,9 +54,13 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     print("ITEM-ID_ARRAY:")
     print(item_id_array)
     print(rating_array);
+    liked_items=[];
     for items in item_id_array:
+        item=items;
         items=int(items)-1;
         URM_train[(user_id_updated,items)]=rating_array[k];
+        if(rating_array[k]==5):
+            liked_items.append(item);
         k=k+1;
     # print(URM_train.toarray());
     saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_train","URM_train",URM_train)
@@ -126,5 +130,5 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     # print(item_id_array);
     # for idx in item_id_array:
         
-    ans=getTopK(user_id_updated,item_id_array)
+    ans=getTopK(user_id_updated,liked_items)
     return ans;
