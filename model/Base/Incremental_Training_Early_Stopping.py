@@ -219,15 +219,15 @@ class Incremental_Training_Early_Stopping(object):
                     elapsed_time = time.time() - start_time
                     new_time_value, new_time_unit = seconds_to_biggest_unit(elapsed_time)
 
-                    print("{}: Convergence reached! Terminating at epoch {}. Best value for '{}' at epoch {} is {:.4f}. Elapsed time {:.2f} {}".format(
-                        algorithm_name, epochs_current+1, validation_metric, self.epochs_best, self.best_validation_metric, new_time_value, new_time_unit))
+                    # print("{}: Convergence reached! Terminating at epoch {}. Best value for '{}' at epoch {} is {:.4f}. Elapsed time {:.2f} {}".format(
+                    #     algorithm_name, epochs_current+1, validation_metric, self.epochs_best, self.best_validation_metric, new_time_value, new_time_unit))
 
 
             elapsed_time = time.time() - start_time
             new_time_value, new_time_unit = seconds_to_biggest_unit(elapsed_time)
 
-            print("{}: Epoch {} of {}. Elapsed time {:.2f} {}".format(
-                algorithm_name, epochs_current+1, epochs_max, new_time_value, new_time_unit))
+            # print("{}: Epoch {} of {}. Elapsed time {:.2f} {}".format(
+            #     algorithm_name, epochs_current+1, epochs_max, new_time_value, new_time_unit))
 
             epochs_current += 1
 

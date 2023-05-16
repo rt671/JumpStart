@@ -53,28 +53,20 @@ def home():
         print(movie_ids);
         movies_data = []
         for movie_id in movie_ids:
-            print(movie_id)
             movie_id_str=str(movie_id);
+            # print(movie_id)
             movie = mongo.db.movies.find_one({'movieId':movie_id_str})
-            print(movie)
-            print(type(movie))
             movieName = str(movie["title"])
-            print(movieName)
-            genres=movie["genres"];
-            print(genres);
-            movie_genres = genres.split('|')
-            print(movie_genres)
-            # movie_name_without_year = movieName[:-6]
-            # Remove the year from the movie name
-            movie_name_without_year = re.sub(r'\(\d+\)$', '', movieName).strip()
-            # print(movie_name_without_year);
-            movie_name_without_year=correct_movie_name(movie_name_without_year);
+            movie_name_without_year = movieName[:-6]
             print(movie_name_without_year);
             movie_data = {}
             movie_data["title"] = movie_name_without_year
-            movie_data["poster_path"] = get_movie_poster_url(movie_name_without_year)
+            api_data = get_movie_data(movie_name_without_year)
+            movie_data["actors"] = api_data[0]
+            movie_data["directors"] = api_data[1]
+            movie_data["poster_path"] = api_data[2]
             movie_data["movie_id"] = movie_id
-            movie_data["genres"]=movie_genres
+            movie_data["genres"] = movie["genres"].split('|')
             movies_data.append(movie_data)
 
         # Render the home.html template and pass in the movie data
@@ -98,13 +90,38 @@ def signup():
             return 'Email already exists'
 
         # Add the user to the database
+        user_meta = mongo.db.usermetadata.find_one({'metadata_id':1})
+        print(user_meta)
+
+
         mongo.db.users.insert_one({
             'name': name,
             'email': email,
-            'password': hashed_password
+            'password': hashed_password,
+            'userId':user_meta['new_user_id']
         })
 
-        return redirect(url_for('login'))
+        usermetadata = mongo.db.usermetadata
+
+        # Find the document you want to update based on a filter
+        filter_query = {'metadata_id': 1}
+
+        # Save the updated document back to the collection
+        update_query = {"$set": {"new_user_id": user_meta['new_user_id'] + 1}}
+
+        update_result = usermetadata.update_one(filter_query, update_query)
+
+        # if update_result.modified_count > 0:
+        #     return "Document updated successfully"
+        # else:
+        #     return "No document matched the filter criteria"
+
+        session['logged_in'] = True
+        session['new_user_registered'] = True
+        session['email'] = email
+        session['userId']=str(user_meta['new_user_id'])
+
+        return redirect(url_for('home'))
     else:
         return render_template('register.html')
 
@@ -236,16 +253,22 @@ def retrain_model():
     print("in retrain")
     userId = int(session['userId'])
     votes_cookie = request.cookies.get('votes')
+    print(votes_cookie)
+    # votes_cookie = {};
+    # votes = {}
+    # if 'new_user_registered' not in session or session['new_user_registered'] == False:
+    #     votes_cookie = request.cookies.get('votes')
     if votes_cookie:
         movie_ids = []
         vote_values = []
         votes = json.loads(votes_cookie)
+        print(votes);
         for movie_id, vote_value in votes.items():
             movie_ids.append(movie_id)
             vote_values.append(vote_value)
             print(f"Movie ID {movie_id}: Vote value {vote_value}")
         result=retrainModel(userId,movie_ids,vote_values);
-        print(result);
+        # print(result);
         return result
     else:
         result=getTopK(userId);
@@ -261,3 +284,29 @@ def correct_movie_name(movie_name):
         return (movie_name_array[1] + ' ' + movie_name_array[0])
     else: 
         return movie_name
+
+def get_movie_data(movie_name):
+    response = requests.get(base_url, params={"apikey": api_key, "t": movie_name})
+    data = response.json()
+    # print(data)
+    actors = []
+    if(data["Response"] == "False" or "Actors" not in data or data["Actors"] == "N/A"):
+        actors = ["N/A"]
+    else:
+        actors_str = data["Actors"]
+        actors = actors_str.split(',')
+        actors = actors[:2]
+
+    director = ''
+    if(data["Response"] == "False" or "Director" not in data or data["Director"] == "N/A"):
+        director = "N/A"
+    else:
+        director = data["Director"]
+
+    poster_url = ''
+    if(data["Response"] == "False" or "Poster" not in data or data["Poster"] == "N/A"):
+        poster_url = "https://upload.wikimedia.org/wikipedia/commons/6/64/Poster_not_available.jpg"
+    else:
+        poster_url = data["Poster"]
+
+    return [actors, director, poster_url]

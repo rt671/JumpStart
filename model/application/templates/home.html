@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
     <head>
         <title>JumpStart</title>
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles/home.css') }}">
@@ -22,23 +23,39 @@
             <div style="margin: 3px; border: 1px solid white; width: 32%; text-align: center; border-radius: 10px; background: linear-gradient(0deg, #C7C5F4, #776BCC);"
                 class="movie mov">
                 <h2 style="text-align: center;">{{ movie["title"] }}</h2>
-                <img style="text-align: center;height:73%; width:70%;" src="{{ movie["poster_path"] }}" alt="{{ movie["title"] }} poster">
+                <img style="text-align: center;height:60%; width:70%;" src="{{ movie["poster_path"] }}" alt="{{ movie["title"] }} poster">
                 <!-- <p style="text-align: center;">Genres: {{ movie["genres"] }}</p> -->
-                <p style="text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
-                    {% for genre in movie["genres"] %}
-                    {% if not loop.first %}, {% endif %}
-                    {{ genre }}
-                    {% endfor %}
-                </p>
-                <form>
-                    <!-- <div -->
+
+                <div style="background-color: aliceblue; margin: 2em 1em 0em; border-radius: 20px;">
+                    <div style="text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                        {% for genre in movie["genres"] %}
+                        {% if not loop.first %}, {% endif %}
+                        <span>{{ genre }}</span>
+                        {% endfor %}
+                    </div>
+                    <div style="text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Actors
+                        :
+                        {% for actor in movie["actors"] %}
+                        {% if not loop.first %}, {% endif %}
+                        <span>{{ actor }}</span>
+                        {% endfor %}
+                    </div>
+                    <div style="text-align: center;font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                        Directors :
+                        {{ movie["directors"] }}
+                    </div>
+                    <form style="margin-top: 1em; margin-bottom: 0.5em;">
+                        <!-- <div -->
                         <!-- style="border-radius: 10px; margin: 10px; background-color:white; margin-left: 30%; margin-right: 30%; padding: 6px;"> -->
                         <input type="radio" name="{{ movie["movie_id"] }}" value="like"> <span
                             style="color: lightseagreen;">Like</span>
                         <input type="radio" name="{{ movie["movie_id"] }}" value="dislike"> <span
                             style="color: #ff0e0e;">Dislike</span>
-                    <!-- </div> -->
-                </form>
+                        <!-- </div> -->
+                    </form>
+                </div>
+
+
             </div>
             {% endfor %}
         </div>

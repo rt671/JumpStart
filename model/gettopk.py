@@ -13,6 +13,7 @@ def getTopK(user_id,item_id_array=[]):
     # extract the W_sparse matrix from the saved dictionary
     W_sparse = saved_dict["W_sparse"]
     W_dense=W_sparse.toarray();
+    print("IIM-content modified:")
     print(W_dense);
     file_name = "URM_train"
 

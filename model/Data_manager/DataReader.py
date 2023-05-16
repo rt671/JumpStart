@@ -257,7 +257,7 @@ class DataReader(object):
         URM_all = self.get_URM_all()
         n_users, n_items_URM = URM_all.shape
         n_interactions = URM_all.nnz
-
+        print(n_users,n_items_URM,n_interactions)
         assert n_users != 0, "DataReader consistency check: Number of users in URM is 0"
         assert n_items_URM != 0, "DataReader consistency check: Number of items in URM is 0"
         assert n_interactions != 0, "DataReader consistency check: Number of interactions in URM is 0"

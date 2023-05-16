@@ -28,7 +28,7 @@ saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","URM_test","U
 
 # The ICM is a scipy.sparse matrix of shape |items|x|features|
 ICM = dataSplitter.get_ICM_from_name("ICM_genre")
-print(ICM.shape);
+print(URM_train.shape);
 saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/","ICM","ICM",ICM)
 
 # print("ICM:\n");

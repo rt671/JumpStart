@@ -54,6 +54,7 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     print("ITEM-ID_ARRAY:")
     print(item_id_array)
     print(rating_array);
+    print(URM_train.shape);
     liked_items=[];
     for items in item_id_array:
         item=items;

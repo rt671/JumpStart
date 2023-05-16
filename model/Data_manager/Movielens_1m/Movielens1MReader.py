@@ -18,7 +18,7 @@ import csv
 class Movielens1MReader(DataReader):
 
     # DATASET_URL = "http://files.grouplens.org/datasets/movielens/ml-1m.zip"
-    DATASET_SUBFOLDER = "Movielens_1m/"
+    DATASET_SUBFOLDER = "Movielens-1m/"
     AVAILABLE_ICM = ["ICM_genre"]
 
     IS_IMPLICIT = True
@@ -57,6 +57,7 @@ class Movielens1MReader(DataReader):
         genres_path = dataFile.extract("movies.csv", path=zipFile_path + "decompressed/")
         # # tags_path = dataFile.extract("ml-1m/tags.dat", path=zipFile_path + "decompressed/")
         URM_path = dataFile.extract("ratings.csv", path=zipFile_path + "decompressed/")
+
         
         self.tokenToFeatureMapper_ICM_genre = {}
 
