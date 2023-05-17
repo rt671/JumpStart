@@ -1,1 +1,1 @@
-Content Based Filtering with Feature Weighting Algorithm, where feature weights for CBF are modified using Collaborative Filtering
+The model for a hybrid recommender system, whose core model is a Content Based Filtering System, with Feature Weighting applied, such that they approximate the Collaborative Filtering Model
