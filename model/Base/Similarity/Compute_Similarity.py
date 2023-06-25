@@ -15,9 +15,6 @@ class SimilarityFunction(Enum):
     ADJUSTED_COSINE = "adjusted"
     EUCLIDEAN = "euclidean"
 
-
-
-
 class Compute_Similarity:
 
     def __init__(self, dataMatrix, use_implementation = "density", similarity = None, **args):

@@ -16,13 +16,6 @@ def check_matrix(X, format='csc', dtype=np.float32):
 def similarityMatrixTopK(item_weights, k=100, verbose = False):
     """
     The function selects the TopK most similar elements, column-wise
-
-    :param item_weights:
-    :param forceSparseOutput:
-    :param k:
-    :param verbose:
-    :param inplace: Default True, WARNING matrix will be modified
-    :return:
     """
 
     assert (item_weights.shape[0] == item_weights.shape[1]), "selectTopK: ItemWeights is not a square matrix"
@@ -82,102 +75,34 @@ def similarityMatrixTopK(item_weights, k=100, verbose = False):
 
     return W_sparse
 
+def seconds_to_biggest_unit(time_in_seconds):
 
+    conversion_factor = [
+        ("sec", 60),
+        ("min", 60),
+        ("hour", 24),
+        ("day", 365),
+    ]
 
+    terminate = False
+    unit_index = 0
 
-def areURMequals(URM1, URM2):
+    new_time_value = time_in_seconds
+    new_time_unit = "sec"
 
-    if(URM1.shape != URM2.shape):
-        return False
-    return (URM1-URM2).nnz ==0
+    while not terminate:
 
+        next_time = new_time_value/conversion_factor[unit_index][1]
 
-def removeTopPop(URM_1, URM_2=None, percentageToRemove=0.2):
-    """
-    Remove the top popular items from the matrix
-    :param URM_1: user X items
-    :param URM_2: user X items
-    :param percentageToRemove: value 1 corresponds to 100%
-    :return: URM: user X selectedItems, obtained from URM_1
-             Array: itemMappings[selectedItemIndex] = originalItemIndex
-             Array: removedItems
-    """
+        if next_time >= 1.0:
+            new_time_value = next_time
 
-    item_pop = URM_1.sum(axis=0)  # this command returns a numpy.matrix of size (1, nitems)
-
-    if URM_2 != None:
-
-        assert URM_2.shape[1] == URM_1.shape[1], \
-            "The two URM do not contain the same number of columns, URM_1 has {}, URM_2 has {}".format(URM_1.shape[1], URM_2.shape[1])
-
-        item_pop += URM_2.sum(axis=0)
-
-
-    item_pop = np.asarray(item_pop).squeeze()  # necessary to convert it into a numpy.array of size (nitems,)
-    popularItemsSorted = np.argsort(item_pop)[::-1]
-
-    numItemsToRemove = int(len(popularItemsSorted)*percentageToRemove)
-
-    # Choose which columns to keep
-    itemMask = np.in1d(np.arange(len(popularItemsSorted)), popularItemsSorted[:numItemsToRemove],  invert=True)
-
-    # Map the column index of the new URM to the original ItemID
-    itemMappings = np.arange(len(popularItemsSorted))[itemMask]
-
-    removedItems = np.arange(len(popularItemsSorted))[np.logical_not(itemMask)]
-
-    return URM_1[:,itemMask], itemMappings, removedItems
-
-
-def addZeroSamples(S_matrix, numSamplesToAdd):
-
-    n_items = S_matrix.shape[1]
-
-    S_matrix_coo = S_matrix.tocoo()
-
-    row_index = list(S_matrix_coo.row)
-    col_index = list(S_matrix_coo.col)
-    data = list(S_matrix_coo.data)
-
-    existingSamples = set(zip(row_index, col_index))
-
-    addedSamples = 0
-    consecutiveFailures = 0
-
-    while (addedSamples < numSamplesToAdd):
-
-        item1 = np.random.randint(0, n_items)
-        item2 = np.random.randint(0, n_items)
-
-        if (item1 != item2 and (item1, item2) not in existingSamples):
-
-            row_index.append(item1)
-            col_index.append(item2)
-            data.append(0)
-
-            existingSamples.add((item1, item2))
-
-            addedSamples += 1
-            consecutiveFailures = 0
+            unit_index += 1
+            new_time_unit = conversion_factor[unit_index][0]
 
         else:
-            consecutiveFailures += 1
-
-        if (consecutiveFailures >= 100):
-            raise SystemExit(
-                "Unable to generate required zero samples, termination at 100 consecutive discarded samples")
-
-    return row_index, col_index, data
+            terminate = True
 
 
-def reshapeSparse(sparseMatrix, newShape):
+    return new_time_value, new_time_unit
 
-    if sparseMatrix.shape[0] > newShape[0] or sparseMatrix.shape[1] > newShape[1]:
-        ValueError("New shape cannot be smaller than SparseMatrix. SparseMatrix shape is: {}, newShape is {}".format(
-            sparseMatrix.shape, newShape))
-
-
-    sparseMatrix = sparseMatrix.tocoo()
-    newMatrix = sps.csr_matrix((sparseMatrix.data, (sparseMatrix.row, sparseMatrix.col)), shape=newShape)
-
-    return newMatrix

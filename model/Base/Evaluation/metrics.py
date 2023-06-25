@@ -1,5 +1,4 @@
 import numpy as np
-import unittest
 
 class Metrics_Object(object):
     """
@@ -185,12 +184,6 @@ def rmse(all_items_predicted_ratings, relevant_items, relevant_items_rating):
         relevant_items_error = relevant_items_error[finite_prediction_mask]
 
         squared_error = np.sum(relevant_items_error)
-
-        # # Second the RMSE against all non-test items assumed having true rating 0
-        # # In order to avoid the need of explicitly indexing all non-relevant items, use a difference
-        # squared_error += np.sum(all_items_predicted_ratings[np.isfinite(all_items_predicted_ratings)]**2) - \
-        #                  np.sum(all_items_predicted_ratings[relevant_items][np.isfinite(all_items_predicted_ratings[relevant_items])]**2)
-
         mean_squared_error = squared_error/finite_prediction_mask.sum()
         rmse = np.sqrt(mean_squared_error)
 
@@ -203,18 +196,6 @@ def recall(is_relevant, pos_items):
 
     assert 0 <= recall_score <= 1, recall_score
     return recall_score
-
-
-def rr(is_relevant):
-    # reciprocal rank of the FIRST relevant item in the ranked list (0 if none)
-
-    ranks = np.arange(1, len(is_relevant) + 1)[is_relevant]
-
-    if len(ranks) > 0:
-        return 1. / ranks[0]
-    else:
-        return 0.0
-
 
 def average_precision(is_relevant, pos_items):
 

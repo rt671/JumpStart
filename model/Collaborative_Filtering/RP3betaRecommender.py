@@ -5,10 +5,10 @@ import pickle
 from sklearn.preprocessing import normalize
 from Base.Recommender_utils import check_matrix, similarityMatrixTopK
 
-from Base.BaseSimilarityMatrixRecommender import BaseSimilarityMatrixRecommender
+from Base.BaseRecommender import BaseRecommender
 import time, sys
 
-class RP3betaRecommender(BaseSimilarityMatrixRecommender):
+class RP3betaRecommender(BaseRecommender):
     RECOMMENDER_NAME = "Collaborative_Filtering"
 
     def __init__(self, URM_train):
@@ -137,18 +137,11 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])), shape=(Pui.shape[1], Pui.shape[1]))
 
         else:
-            folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices"
+            folder_path = "/Jumpstart/model/matrices"
             file_name = self.RECOMMENDER_NAME
-
-            # load the saved dictionary
             saved_dict = pickle.load(open(folder_path + file_name, "rb"))
-
-            # extract the W_sparse matrix from the saved dictionary
             self.W_sparse = saved_dict["W_sparse"]
 
-            # check the type and shape of the loaded matrix
-            # print(type(self.W_sparse))    # should be <class 'scipy.sparse.csr.csr_matrix'>
-            # print(self.W_sparse.shape) 
             # rows_changed=[5,3];
             print("ROWS-changed:")
             print(self.rows_changed)
@@ -159,11 +152,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                 current_row=current_row-1;
                 # print(type(current_row))
                 similarity_block = d_t[(current_row):(current_row + 1), :] * Pui
-                # print(similarity_block);
                 similarity_block = similarity_block.toarray()
-                # print(similarity_block);
-                # for row_in_block in range(block_dim):
-                # print(similarity_block);
                 row_data = np.multiply(similarity_block[0, :], degree)
                 # print(row_data);
                 row_data[current_row] = 0
@@ -176,7 +165,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                 # print(values_to_add);
                 # print(cols_to_add);
                 for idx in range(len(cols_to_add)):
-                    self.W_sparse[current_row,cols_to_add[idx]]=values_to_add[idx];
+                    self.W_sparse[current_row,cols_to_add[idx]]=values_to_add[idx]
 
         if self.normalize_similarity:
             self.W_sparse = normalize(self.W_sparse, norm='l1', axis=1)
@@ -189,20 +178,3 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
         W_dense=self.W_sparse.toarray()
         
         self.saveModel("/Jumpstart/model/matrices")
-
-
-    def saveModel(self, folder_path, file_name = None):
-
-        if file_name is None:
-            file_name = self.RECOMMENDER_NAME
-
-        print("{}: Saving model in file '{}'".format(self.RECOMMENDER_NAME, folder_path + file_name))
-
-        dictionary_to_save = {"W_sparse": self.W_sparse}
-
-
-        pickle.dump(dictionary_to_save,
-                    open(folder_path + file_name, "wb"),
-                    protocol=pickle.HIGHEST_PROTOCOL)
-
-        print("{}: Saving complete".format(self.RECOMMENDER_NAME))

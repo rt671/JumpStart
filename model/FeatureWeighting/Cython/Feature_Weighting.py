@@ -1,9 +1,7 @@
 from Base.Incremental_Training_Early_Stopping import Incremental_Training_Early_Stopping
 from Base.Recommender_utils import check_matrix
-from Base.IR_feature_weighting import okapi_BM_25, TF_IDF
 from Base.Similarity.Compute_Similarity import Compute_Similarity
-from Base.BaseSimilarityMatrixRecommender import BaseSimilarityMatrixRecommender
-from CythonCompiler.run_compile_subprocess import run_compile_subprocess
+from Base.BaseRecommender import BaseRecommender
 
 import time, sys
 import numpy as np
@@ -30,11 +28,11 @@ class EvaluatorCFW_D_wrapper(object):
         return self.evaluator_object.evaluateRecommender(recommender_object)
 
 
-class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Early_Stopping):
+class Feature_Weighting(BaseRecommender,Incremental_Training_Early_Stopping):
 
     RECOMMENDER_NAME = "Feature_Weighted_Content_Based"
 
-    INIT_TYPE_VALUES = ["random", "one", "BM25", "TF-IDF","zero"]
+    INIT_TYPE_VALUES = ["random", "one","zero"]
 
     def __init__(self, URM_train, ICM, sim_matrix_target):
 
@@ -83,14 +81,6 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
             weights_initialization_D = np.ones(self.n_features, dtype=np.float64)
         elif initialization_mode_D == "zero":
             weights_initialization_D = np.zeros(self.n_features, dtype=np.float64)
-        elif initialization_mode_D == "BM25":
-            weights_initialization_D = np.ones(self.n_features, dtype=np.float64)
-            self.ICM = self.ICM.astype(np.float32)
-            self.ICM = okapi_BM_25(self.ICM)
-        elif initialization_mode_D == "TF-IDF":
-            weights_initialization_D = np.ones(self.n_features, dtype=np.float64)
-            self.ICM = self.ICM.astype(np.float32)
-            self.ICM = TF_IDF(self.ICM)
         else:
             raise ValueError("CFW_D_Similarity_Cython: 'init_type' not recognized")
 

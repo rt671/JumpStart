@@ -1,26 +1,9 @@
-
-#cython: boundscheck=False
-#cython: wraparound=True
-#cython: initializedcheck=False
-#cython: language_level=3
-#cython: nonecheck=False
-#cython: cdivision=True
-#cython: unpack_method_calls=True
-#cython: overflowcheck=False
-
-"""
-Determine the operative system. The interface of numpy returns a different type for argsort under windows and linux
-
-http://docs.cython.org/en/latest/src/userguide/language_basics.html#conditional-compilation
-"""
 IF UNAME_SYSNAME == "linux":
     DEF LONG_t = "long"
 ELIF  UNAME_SYSNAME == "Windows":
     DEF LONG_t = "long long"
 ELSE:
     DEF LONG_t = "long long"
-
-
 
 import time, sys
 

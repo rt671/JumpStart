@@ -1,4 +1,4 @@
-from retrain_model import retrainModel
+from model.retrain_model import retrainModel
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, make_response
 from flask_pymongo import PyMongo
 import bcrypt
@@ -8,7 +8,7 @@ import json
 import requests
 import re
 import numpy as np
-from gettopk import getTopK
+from model.gettopk import getTopK
 
 load_dotenv()
 

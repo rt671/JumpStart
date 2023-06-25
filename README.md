@@ -1,6 +1,6 @@
 # Jumpstart: Tackling Cold Start Issue in Recommendations
 
-## Model for a hybrid recommender system, whose core model is a Content Based Filtering System, with Feature Weighting applied, such that they approximate the Collaborative Filtering Model
+## Machine Learning Model for a hybrid recommender system, whose core model is a Content Based Filtering System, with Feature Weighting applied, such that they approximate the Collaborative Filtering Model
 
 A significant challenge that many recommendation systems
 face is the **cold start problem**. This problem arises when a system must make
@@ -16,3 +16,9 @@ the cold start resistance of content based filtering.
 The System Model is described below:
 
 ![image](https://github.com/rt671/JumpStart/assets/82562103/49adb7bd-7bf6-42c2-a29e-ba174b955ee3)
+
+Code Structure:
+- For the training of the model: run_first_time.py is executed explicitly
+- For retraining of the model: retrain_model.py is executed by the application, whenever the application is refreshed.
+- Retraining calls the Feature Weighting Algorithm which contains the Machine Learning Model.\
+
