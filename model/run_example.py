@@ -28,5 +28,5 @@ saveModel("/Jumpstart/model/matrices/","ICM","ICM",ICM)
 
 retrainModel(2,[],[],True)
 
-res=getTopK(4);
+res=getTopK(4)
 print(res)

@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 26/06/18
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 import numpy as np
 import scipy.sparse as sps
 import time, sys, copy
@@ -13,8 +5,7 @@ import time, sys, copy
 from enum import Enum
 from Utils.seconds_to_biggest_unit import seconds_to_biggest_unit
 
-from Base.Evaluation.metrics import roc_auc, precision, precision_recall_min_denominator, recall, MAP, MRR, ndcg, arhr, rmse, \
-    Novelty, Coverage_Item, Metrics_Object, Coverage_User, Gini_Diversity, Shannon_Entropy, Diversity_MeanInterList, Diversity_Herfindahl
+from Base.Evaluation.metrics import roc_auc, precision, precision_recall_min_denominator, recall, MAP, ndcg, rmse, Metrics_Object, Coverage_Item, Coverage_User, Gini_Diversity
 
 
 class EvaluatorMetrics(Enum):
@@ -24,29 +15,18 @@ class EvaluatorMetrics(Enum):
     PRECISION_RECALL_MIN_DEN = "PRECISION_RECALL_MIN_DEN"
     RECALL = "RECALL"
     MAP = "MAP"
-    MRR = "MRR"
     NDCG = "NDCG"
     F1 = "F1"
     HIT_RATE = "HIT_RATE"
-    ARHR = "ARHR"
     RMSE = "RMSE"
-    NOVELTY = "NOVELTY"
-    DIVERSITY_SIMILARITY = "DIVERSITY_SIMILARITY"
-    DIVERSITY_MEAN_INTER_LIST = "DIVERSITY_MEAN_INTER_LIST"
-    DIVERSITY_HERFINDAHL = "DIVERSITY_HERFINDAHL"
     COVERAGE_ITEM = "COVERAGE_ITEM"
     COVERAGE_USER = "COVERAGE_USER"
     DIVERSITY_GINI = "DIVERSITY_GINI"
-    SHANNON_ENTROPY = "SHANNON_ENTROPY"
-
 
 
 def create_empty_metrics_dict(n_items, n_users, URM_train, ignore_items, ignore_users, cutoff, diversity_similarity_object):
 
     empty_dict = {}
-
-    # from Base.Evaluation.ResultMetric import ResultMetric
-    # empty_dict = ResultMetric()
 
     for metric in EvaluatorMetrics:
         if metric == EvaluatorMetrics.COVERAGE_ITEM:
@@ -55,30 +35,12 @@ def create_empty_metrics_dict(n_items, n_users, URM_train, ignore_items, ignore_
         elif metric == EvaluatorMetrics.DIVERSITY_GINI:
             empty_dict[metric.value] = Gini_Diversity(n_items, ignore_items)
 
-        elif metric == EvaluatorMetrics.SHANNON_ENTROPY:
-            empty_dict[metric.value] = Shannon_Entropy(n_items, ignore_items)
-
         elif metric == EvaluatorMetrics.COVERAGE_USER:
             empty_dict[metric.value] = Coverage_User(n_users, ignore_users)
-
-        elif metric == EvaluatorMetrics.DIVERSITY_MEAN_INTER_LIST:
-            empty_dict[metric.value] = Diversity_MeanInterList(n_items, cutoff)
-
-        elif metric == EvaluatorMetrics.DIVERSITY_HERFINDAHL:
-            empty_dict[metric.value] = Diversity_Herfindahl(n_items, ignore_items)
-
-        elif metric == EvaluatorMetrics.NOVELTY:
-            empty_dict[metric.value] = Novelty(URM_train)
 
         elif metric == EvaluatorMetrics.MAP:
             empty_dict[metric.value] = MAP()
 
-        elif metric == EvaluatorMetrics.MRR:
-            empty_dict[metric.value] = MRR()
-
-        elif metric == EvaluatorMetrics.DIVERSITY_SIMILARITY:
-                if diversity_similarity_object is not None:
-                    empty_dict[metric.value] = copy.deepcopy(diversity_similarity_object)
         else:
             empty_dict[metric.value] = 0.0
 

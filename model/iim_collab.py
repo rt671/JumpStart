@@ -4,7 +4,7 @@ import random
 
 def iim(item_id_array,top_k_items):
 
-    folder_path = "/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/"
+    folder_path = "/Jumpstart/model/matrices/"
     file_name = "Collaborative_Filtering"
 
     # load the saved dictionary
@@ -12,9 +12,9 @@ def iim(item_id_array,top_k_items):
 
     # extract the W_sparse matrix from the saved dictionary
     W_sparse = saved_dict["W_sparse"]
-    W_dense=W_sparse.toarray();
+    W_dense=W_sparse.toarray()
     print("Item-id-array in iim-collab:")
-    print(item_id_array);
+    print(item_id_array)
     print("IIM-Collab:\n")
     for row in item_id_array:
         row = int(row)

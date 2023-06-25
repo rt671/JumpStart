@@ -1,12 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 30/03/2019
-
-@author: Maurizio Ferrari Dacrema
-"""
-
-
 def seconds_to_biggest_unit(time_in_seconds):
 
     conversion_factor = [

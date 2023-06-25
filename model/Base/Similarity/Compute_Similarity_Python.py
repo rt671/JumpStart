@@ -1,17 +1,7 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 23/10/17
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 import numpy as np
 import time, sys
 import scipy.sparse as sps
 from Base.Recommender_utils import check_matrix
-
-
 
 class Compute_Similarity_Python:
 

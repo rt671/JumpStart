@@ -1,16 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 06/07/2018
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 import time, sys
 from Utils.seconds_to_biggest_unit import seconds_to_biggest_unit
-
-
-
 
 class Incremental_Training_Early_Stopping(object):
     """

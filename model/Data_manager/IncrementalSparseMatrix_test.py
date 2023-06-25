@@ -1,11 +1,4 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-
-
 import unittest
-
-
-
 import scipy.sparse as sps
 
 from data.IncrementalSparseMatrix import IncrementalSparseMatrix, IncrementalSparseMatrix_LowRAM
@@ -33,7 +26,6 @@ def random_string():
     return randomstring
 
 
-
 class MyTestCase(unittest.TestCase):
 
 
@@ -55,11 +47,6 @@ class MyTestCase(unittest.TestCase):
         randomMatrix_incremental = incrementalMatrix.get_SparseMatrix()
 
         assert sparse_are_equals(randomMatrix, randomMatrix_incremental)
-
-
-
-
-
 
 
     def test_IncrementalSparseMatrix_add_rows(self):

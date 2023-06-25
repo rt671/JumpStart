@@ -3,17 +3,6 @@ import scipy.sparse as sps
 import numpy as np
 import pickle, os
 
-
-
-
-#################################################################################################################
-#############################
-#############################               DATA READER
-#############################
-#################################################################################################################
-
-
-
 class DataReader(object):
     """
     Abstract class for the DataReaders, each shoud be implemented for a specific dataset

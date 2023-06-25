@@ -9,8 +9,6 @@ from Base.BaseSimilarityMatrixRecommender import BaseSimilarityMatrixRecommender
 import time, sys
 
 class RP3betaRecommender(BaseSimilarityMatrixRecommender):
-    """ RP3beta recommender """
-
     RECOMMENDER_NAME = "Collaborative_Filtering"
 
     def __init__(self, URM_train):
@@ -30,12 +28,8 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
         self.topK = topK
         self.implicit = implicit
         self.normalize_similarity = normalize_similarity
-        self.firstTime=firstTime;
+        self.firstTime=firstTime
         self.rows_changed=item_id_array
-
-        
-        # if X.dtype != np.float32:
-        #     print("RP3beta fit: For memory usage reasons, we suggest to use np.float32 as dtype for the dataset")
         
         if self.min_rating > 0:
             self.URM_train.data[self.URM_train.data < self.min_rating] = 0
@@ -43,7 +37,7 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             if self.implicit:
                 self.URM_train.data = np.ones(self.URM_train.data.size, dtype=np.float32)
 
-        #Pui is the row-normalized urm
+        # Pui is the row-normalized urm
         Pui = normalize(self.URM_train, norm='l1', axis=1)
         # print("row-normalized urm:\n")
         # print(Pui.toarray());
@@ -73,13 +67,10 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             Pui = Pui.power(self.alpha)
             Piu = Piu.power(self.alpha)
 
-        # Final matrix is computed as Pui * Piu * Pui
-        # Multiplication unpacked for memory usage reasons
         block_dim = 200
         d_t = Piu
-        # print("d_t:\n")
-        # print(d_t.toarray(),"\n");
-        W_sparse_mat=[];
+       
+        W_sparse_mat=[]
         if(firstTime==True):
         # Use array as it reduces memory requirements compared to lists
             dataBlock = 10000000
@@ -187,13 +178,6 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
                 for idx in range(len(cols_to_add)):
                     self.W_sparse[current_row,cols_to_add[idx]]=values_to_add[idx];
 
-
-            # self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/matrices/")
-
-            # self.W_sparse = sps.csr_matrix((values[:numCells], (rows[:numCells], cols[:numCells])), shape=(Pui.shape[1], Pui.shape[1]))
-            # print("RP3 beta-output:\n")
-            # # print(self.W_sparse);
-            # print(self.W_sparse.toarray());
         if self.normalize_similarity:
             self.W_sparse = normalize(self.W_sparse, norm='l1', axis=1)
 
@@ -202,28 +186,9 @@ class RP3betaRecommender(BaseSimilarityMatrixRecommender):
             self.W_sparse = similarityMatrixTopK(self.W_sparse, k=self.topK)
             
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
-        W_dense=self.W_sparse.toarray();
-        # print(W_dense[0]);
-        # print("IIM-Collab:")
-        # for rows in self.rows_changed:
-        #     row=int(rows);
-        #     print(row);
-        #     print(W_dense[row]);
-        #     # for idx in range(len(W_dense[row])):
-        #     #     if(W_dense[row][idx]!=0):
-        #     #         print(idx,W_dense[row][idx]);
-        #     # print("\n");
-        #     sorted_indices = sorted(range(len(W_dense[row])), key=lambda idx: W_dense[row][idx], reverse=True)
-        #     length=0;
-        #     for idx in sorted_indices:
-        #         if W_dense[row][idx] != 0:
-        #             length+=1;
-        #             print(idx, W_dense[row][idx])
-        #             if(length>30):
-        #                 break;
-        #     print("\n")
-        # print(self.W_sparse.toarray());
-        self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices")
+        W_dense=self.W_sparse.toarray()
+        
+        self.saveModel("/Jumpstart/model/matrices")
 
 
     def saveModel(self, folder_path, file_name = None):

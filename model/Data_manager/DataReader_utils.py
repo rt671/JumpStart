@@ -1,8 +1,4 @@
-
 import numpy as np
-
-
-
 
 def split_big_CSR_in_columns(sparse_matrix_to_split, num_split = 2):
     """
@@ -39,14 +35,6 @@ def split_big_CSR_in_columns(sparse_matrix_to_split, num_split = 2):
         sparse_matrix_split_list.append(sparse_matrix_to_split[:,start_col:end_col])
 
     return sparse_matrix_split_list
-
-
-
-
-
-
-
-
 
 def remove_empty_rows_and_cols(URM, ICM = None):
 
