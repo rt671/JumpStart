@@ -39,19 +39,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
     def __init__(self, URM_train, ICM, sim_matrix_target):
 
         super(Feature_Weighting, self).__init__(URM_train)
-
-        # if (URM_train.shape[1] != ICM.shape[0]):
-        #     raise ValueError("Number of items not consistent. URM contains {} but ICM contains {}".format(URM_train.shape[1], ICM.shape[0]))
-
-        # if(sim_matrix_target.shape[0] != sim_matrix_target.shape[1]):
-        #     raise ValueError("Items imilarity matrix is not square: rows are {}, columns are {}".format(sim_matrix_target.shape[0], sim_matrix_target.shape[1]))
-
-        # if(sim_matrix_target.shape[0] != ICM.shape[0]):
-        #     raise ValueError("Number of items not consistent. S_matrix contains {} but ICM contains {}".format(sim_matrix_target.shape[0], ICM.shape[0]))
-
         self.sim_matrix_target = check_matrix(sim_matrix_target, 'csr')
-        # print("SIM_MAT_TARGET:")
-        # print(sim_matrix_target.toarray());
         self.ICM = check_matrix(ICM, 'csr')
         self.n_features = self.ICM.shape[1]
 
@@ -212,20 +200,12 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
         self.row_list = self.row_list[:num_samples]
         self.col_list = self.col_list[:num_samples]
         self.data_list = self.data_list[:num_samples]
-        # print("ALL LIST:")
-        # print(self.row_list)
-        # print(self.col_list)
-        # print(self.data_list)
 
         data_nnz = sum(np.array(self.data_list)!=0) # number of non-zero cells in data_list
         data_sum = sum(self.data_list)
 
         collaborative_nnz = self.sim_matrix_target.nnz
         collaborative_sum = sum(self.sim_matrix_target.data)
-
-        # self.write_log("Nonzero collaborative cell sum is: {:.2E}, average is: {:.2E}, "
-        #               "average over all collaborative data is {:.2E}".format(
-        #               data_sum, data_sum/data_nnz, collaborative_sum/collaborative_nnz))
 
     def find_similar_items(self, row_index,sim_mat_content,num_common_coordinates,estimated_n_samples,num_samples):
 
@@ -308,7 +288,7 @@ class Feature_Weighting(BaseSimilarityMatrixRecommender,Incremental_Training_Ear
 
         self.W_sparse = self.similarity.compute_similarity()
         self.W_sparse = check_matrix(self.W_sparse, format='csr')
-        self.saveModel("/Users/varunjain/Desktop/Jumpstart-BTP/model/matrices/")
+        self.saveModel("/Jumpstart/model/matrices/")
 
 
 

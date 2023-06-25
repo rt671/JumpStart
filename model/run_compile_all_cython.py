@@ -1,14 +1,5 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on 30/03/2019
-
-@author: Maurizio Ferrari Dacrema
-"""
-
 import sys, glob, traceback, os
 from CythonCompiler.run_compile_subprocess import run_compile_subprocess
-
 
 if __name__ == '__main__':
 
@@ -16,7 +7,6 @@ if __name__ == '__main__':
         "FeatureWeighting",
         "Base/Similarity",
     ]
-
 
     cython_file_list = []
 

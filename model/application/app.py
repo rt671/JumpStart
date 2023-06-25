@@ -8,13 +8,7 @@ import json
 import requests
 import re
 import numpy as np
-# from model import run_example
-# import sys
-# sys.path.append('/Users/varunjain/Desktop/Jumpstart-BTP/')
-# path="/Users/varunjain/Desktop/Jumpstart-BTP/model"
 from gettopk import getTopK
-# export PYTHONPATH="$PYTHONPATH:/Users/varunjain/Desktop/Jumpstart-BTP/model"
-# from gettopk import getTopK
 
 load_dotenv()
 
@@ -41,24 +35,17 @@ def home():
         session['refreshed'] = True
         print_session_detail()
         userId = int(session['userId'])
-        # movie_ids=getTopK(userId);
-        # movie_ids=[1,2,3,4]
 
-        # print(result);
-        movie_ids=retrain_model();
-        # print(len(movie_ids))
-        
-        # if movie_ids.any()==None:
-        #     movie_ids=getTopK(userId);
-        print(movie_ids);
+        movie_ids=retrain_model()
+        print(movie_ids)
         movies_data = []
         for movie_id in movie_ids:
-            movie_id_str=str(movie_id);
+            movie_id_str=str(movie_id)
             # print(movie_id)
             movie = mongo.db.movies.find_one({'movieId':movie_id_str})
             movieName = str(movie["title"])
             movie_name_without_year = movieName[:-6]
-            print(movie_name_without_year);
+            print(movie_name_without_year)
             movie_data = {}
             movie_data["title"] = movie_name_without_year
             api_data = get_movie_data(movie_name_without_year)
@@ -71,7 +58,6 @@ def home():
 
         # Render the home.html template and pass in the movie data
         return render_template("home.html", movies_data=movies_data)
-
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -110,11 +96,6 @@ def signup():
         update_query = {"$set": {"new_user_id": user_meta['new_user_id'] + 1}}
 
         update_result = usermetadata.update_one(filter_query, update_query)
-
-        # if update_result.modified_count > 0:
-        #     return "Document updated successfully"
-        # else:
-        #     return "No document matched the filter criteria"
 
         session['logged_in'] = True
         session['new_user_registered'] = True
@@ -174,8 +155,6 @@ def vote():
 
     # Update the votes dictionary with the new vote
     votes[movie_id] = vote_value
-    # print(votes[movie_id])
-    # print(len(votes))
     
     # Save the updated votes dictionary to a cookie and return a response
     response = make_response('OK')
@@ -192,37 +171,13 @@ def logout():
     session.pop('logged_in', None)
     session.pop('userId', None)
     session.pop('email',None)
-    # session.pop('votes',None)
     response = make_response(redirect(url_for('login')))
 
     response.delete_cookie('votes')
     return response
 
-# @app.route('/matrix', methods=['POST'])
-# def create_matrix():
-#     data = request.get_json()
-#     rows = data['rows']
-#     cols = data['cols']
-#     matrix = data['data']
-#     # document-based format
-#     matrix_doc = {
-#         'name': 'URM',
-#         'matrix': matrix,
-#         'rows': rows,
-#         'cols': cols
-#     }
-#     mongo.db.matrices.insert_one(matrix_doc)
-#     return jsonify({'message': 'Matrix created successfully!'})
-
-# @app.route('/matrix', methods=['GET'])
-# def fetch_matrix():
-#     matrix = mongo.db.matrices.find_one({'name':'URM'})
-#     # print(matrix)
-#     return 
-
 if __name__ == '__main__':
     app.run(debug=True)
-
 
 
 base_url = "http://www.omdbapi.com/"
@@ -254,15 +209,12 @@ def retrain_model():
     userId = int(session['userId'])
     votes_cookie = request.cookies.get('votes')
     print(votes_cookie)
-    # votes_cookie = {};
-    # votes = {}
-    # if 'new_user_registered' not in session or session['new_user_registered'] == False:
-    #     votes_cookie = request.cookies.get('votes')
+    
     if votes_cookie:
         movie_ids = []
         vote_values = []
         votes = json.loads(votes_cookie)
-        print(votes);
+        print(votes)
         for movie_id, vote_value in votes.items():
             movie_ids.append(movie_id)
             vote_values.append(vote_value)
@@ -271,8 +223,8 @@ def retrain_model():
         # print(result);
         return result
     else:
-        result=getTopK(userId);
-        return result;
+        result=getTopK(userId)
+        return result
 
 def correct_movie_name(movie_name):
     
