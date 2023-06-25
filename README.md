@@ -1,6 +1,6 @@
-Jumpstart: Tackling Cold Start Issue in Recommendations
+# Jumpstart: Tackling Cold Start Issue in Recommendations
 
-Model for a hybrid recommender system, whose core model is a Content Based Filtering System, with Feature Weighting applied, such that they approximate the Collaborative Filtering Model
+## Model for a hybrid recommender system, whose core model is a Content Based Filtering System, with Feature Weighting applied, such that they approximate the Collaborative Filtering Model
 
 A significant challenge that many recommendation systems
 face is the **cold start problem**. This problem arises when a system must make

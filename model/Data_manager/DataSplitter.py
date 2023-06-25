@@ -1,4 +1,3 @@
-
 import traceback, os
 
 
@@ -68,10 +67,6 @@ class DataSplitter(object):
 
     def get_loaded_ICM_dict(self):
         return self.get_dataReader_object().get_loaded_ICM_dict()
-
-
-
-
 
     def load_data(self, save_folder_path = None):
 

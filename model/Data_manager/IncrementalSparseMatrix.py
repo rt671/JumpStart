@@ -1,4 +1,3 @@
-
 import scipy.sparse as sps
 
 class IncrementalSparseMatrix_ListBased(object):
@@ -139,13 +138,7 @@ class IncrementalSparseMatrix_ListBased(object):
 
         return sparseMatrix
 
-
-
-
-
 import numpy as np
-
-
 
 class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
 

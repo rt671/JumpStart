@@ -1,15 +1,9 @@
 import pickle
 from Collaborative_Filtering.RP3betaRecommender import RP3betaRecommender
 from FeatureWeighting.Cython.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
-
 from Base.Evaluation.Evaluator import EvaluatorHoldout
-
-from Data_manager.Movielens_1m.Movielens1MReader import Movielens1MReader
-from Data_manager.DataSplitter_k_fold import DataSplitter_Warm_k_fold
 from saveMatrices import saveModel
 from gettopk import getTopK
-import scipy.sparse as sps
-import numpy as np
 import pickle
 
 def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
@@ -17,33 +11,19 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     print("Retrain running...")
     folder_path = "/Jumpstart/model/matrices/"
     file_name = "URM_train"
-
-    # load the saved dictionary
     saved_dict = pickle.load(open(folder_path + file_name, "rb"))
-
-    # extract the W_sparse matrix from the saved dictionary
     URM_train = saved_dict["URM_train"]
-    # print(URM_train)
+
     file_name = "URM_validation"
-
-    # load the saved dictionary
     saved_dict = pickle.load(open(folder_path + file_name, "rb"))
-
-    # extract the W_sparse matrix from the saved dictionary
     URM_validation = saved_dict["URM_validation"]
+   
     file_name = "URM_test"
-
-    # load the saved dictionary
     saved_dict = pickle.load(open(folder_path + file_name, "rb"))
-
-    # extract the W_sparse matrix from the saved dictionary
     URM_test = saved_dict["URM_test"]
+    
     file_name = "ICM"
-
-    # load the saved dictionary
     saved_dict = pickle.load(open(folder_path + file_name, "rb"))
-
-    # extract the W_sparse matrix from the saved dictionary
     ICM = saved_dict["ICM"]
 
     k=0
@@ -73,8 +53,6 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
     evaluator_validation_earlystopping = EvaluatorCFW_D_wrapper(evaluator_validation, ICM_target=ICM, model_to_use="last")
     firstTime=firstTime
 
-    # We compute the similarity matrix resulting from a RP3beta recommender
-    # Note that we have not included the code for parameter tuning, which should be done
     cf_parameters = {'topK': 500,
                     'alpha': 0.9,
                     'beta': 0.7,

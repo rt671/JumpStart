@@ -1,5 +1,4 @@
 import pickle
-import numpy as np
 import random
 
 def iim(item_id_array,top_k_items):

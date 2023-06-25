@@ -3,8 +3,6 @@ import pickle, os
 from Base.Recommender_utils import check_matrix
 
 class BaseRecommender(object):
-    """Abstract BaseRecommender"""
-
     RECOMMENDER_NAME = "Recommender_Base_Class"
 
     def __init__(self, URM_train):

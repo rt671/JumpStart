@@ -1,11 +1,10 @@
-
 import scipy.sparse as sps
 import numpy as np
 import pickle, os
 
 class DataReader(object):
     """
-    Abstract class for the DataReaders, each shoud be implemented for a specific dataset
+    Abstract class for the DataReaders, each should be implemented for a specific dataset
     DataReader has the following functions:
      - It loads the data of the original dataset and saves it into sparse matrices
      - It exposes the following functions
