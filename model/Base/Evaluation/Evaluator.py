@@ -46,9 +46,6 @@ def create_empty_metrics_dict(n_items, n_users, URM_train, ignore_items, ignore_
     return  empty_dict
 
 
-
-
-
 def get_result_string(results_run, n_decimals=7):
 
     output_str = ""
@@ -338,15 +335,9 @@ class EvaluatorHoldout(Evaluator):
         else:
             print("WARNING: No users had a sufficient number of relevant items")
 
-
-
         results_run_string = get_result_string(results_dict)
-
-
-
 
         if self.ignore_items_flag:
             recommender_object.reset_items_to_ignore()
-
 
         return (results_dict, results_run_string)

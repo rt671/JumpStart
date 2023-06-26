@@ -1,4 +1,5 @@
 import scipy.sparse as sps
+import numpy as np
 
 class IncrementalSparseMatrix_ListBased(object):
 
@@ -37,7 +38,6 @@ class IncrementalSparseMatrix_ListBased(object):
 
 
 
-
     def add_single_row(self, row_id, col_list, data = 1.0):
 
         n_elements = len(col_list)
@@ -56,8 +56,6 @@ class IncrementalSparseMatrix_ListBased(object):
         if self._auto_create_column_mapper:
             return self._column_original_ID_to_index.copy()
 
-
-
         dummy_column_original_ID_to_index = {}
 
         for col in range(self._n_cols):
@@ -71,8 +69,6 @@ class IncrementalSparseMatrix_ListBased(object):
 
         if self._auto_create_row_mapper:
             return self._row_original_ID_to_index.copy()
-
-
 
         dummy_row_original_ID_to_index = {}
 
@@ -135,10 +131,8 @@ class IncrementalSparseMatrix_ListBased(object):
         sparseMatrix = sps.csr_matrix((self._data_list, (self._row_list, self._col_list)), shape=shape)
         sparseMatrix.eliminate_zeros()
 
-
         return sparseMatrix
 
-import numpy as np
 
 class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
 
@@ -188,8 +182,6 @@ class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
             self._next_cell_pointer += 1
 
 
-
-
     def add_single_row(self, row_index, col_list, data = 1.0):
 
         n_elements = len(col_list)
@@ -197,8 +189,6 @@ class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
         self.add_data_lists([row_index] * n_elements,
                             col_list,
                             [data] * n_elements)
-
-
 
 
 
@@ -223,16 +213,9 @@ class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
         return sparseMatrix
 
 
-
-
-
-
-
-
 class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
     """
     This class builds an IncrementalSparseMatrix allowing to constrain the row and column IDs that will be added
-    It is useful, for example, when
     """
 
     def __init__(self, preinitialized_col_mapper = None, preinitialized_row_mapper = None,
@@ -241,12 +224,6 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
         Possible behaviour is:
         - Automatically add new ids:    if_new_col = "add" and predefined_col_mapper = None or predefined_col_mapper = {dict}
         - Ignore new ids                if_new_col = "ignore" and predefined_col_mapper = {dict}
-        :param preinitialized_col_mapper:
-        :param preinitialized_row_mapper:
-        :param on_new_col:
-        :param on_new_row:
-        :param n_rows:
-        :param n_cols:
         """
 
         super(IncrementalSparseMatrix_FilterIDs, self).__init__(dtype = dtype)
@@ -255,28 +232,11 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
         self._col_list = []
         self._data_list = []
 
-        assert on_new_col in ["add", "ignore"], "IncrementalSparseMatrix: if_new_col value not recognized, allowed values are 'add', 'ignore', provided was '{}'".format(on_new_col)
-        assert on_new_row in ["add", "ignore"], "IncrementalSparseMatrix: if_new_row value not recognized, allowed values are 'add', 'ignore', provided was '{}'".format(on_new_row)
-
-        if on_new_col == "add":
-            assert preinitialized_col_mapper is None or isinstance(preinitialized_col_mapper, dict), "IncrementalSparseMatrix: if on_new_col is 'add' then preinitialized_col_mapper must be either 'None' or contain a dictionary"
-
-        if on_new_row == "add":
-            assert preinitialized_row_mapper is None or isinstance(preinitialized_row_mapper, dict), "IncrementalSparseMatrix: if on_new_row is 'add' then preinitialized_row_mapper must be either 'None' or contain a dictionary"
-
-        if on_new_col == "ignore":
-            assert isinstance(preinitialized_col_mapper, dict), "IncrementalSparseMatrix: if on_new_col is 'ignore' then preinitialized_col_mapper must be a dictionary"
-
-        if on_new_row == "ignore":
-            assert isinstance(preinitialized_row_mapper, dict), "IncrementalSparseMatrix: if on_new_row is 'ignore' then preinitialized_row_mapper must be a dictionary"
-
-
         self._on_new_col_add_flag = on_new_col == "add"
         self._on_new_row_add_flag = on_new_row == "add"
 
         self._auto_create_row_mapper = True
         self._auto_create_column_mapper = True
-
 
         if preinitialized_col_mapper is None:
             self._column_original_ID_to_index = {}
@@ -352,12 +312,7 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
                 self._next_cell_pointer += 1
 
 
-
     def get_SparseMatrix(self):
-
-        # Set fixed dimension len to ensure that the matrix is not smaller than the number of entries in the dictionary
         self._n_rows = len(self._row_original_ID_to_index)
         self._n_cols = len(self._column_original_ID_to_index)
-
-
         return super(IncrementalSparseMatrix_FilterIDs, self).get_SparseMatrix()

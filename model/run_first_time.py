@@ -1,4 +1,4 @@
-from Data_manager.Movielens_1m.Movielens1MReader import Movielens1MReader
+from Data_manager.Movielens1MReader import Movielens1MReader
 from Data_manager.DataSplitter_k_fold import DataSplitter_Warm_k_fold
 from saveMatrices import saveModel
 from gettopk import getTopK

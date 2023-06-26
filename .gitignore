@@ -1,6 +1,6 @@
 # DATA FILES
-Data_manager_split_datasets/**
-Data_manager_offline_datasets/**
+model/Data_manager_split_datasets/**
+model/Data_manager_offline_datasets/**
 
 **/.pytest_cache/*
 

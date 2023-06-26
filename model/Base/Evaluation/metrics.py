@@ -1,9 +1,8 @@
 import numpy as np
 
 class Metrics_Object(object):
-    """
-    Abstract class that should be used as superclass of all metrics requiring an object, therefore a state, to be computed
-    """
+    # Abstract class used as superclass of all metrics requiring an object
+
     def __init__(self):
         pass
 
@@ -126,8 +125,6 @@ class Gini_Diversity(Metrics_Object):
 
         self.recommended_counter += other_metric_object.recommended_counter
 
-import scipy.sparse as sps
-
 def roc_auc(is_relevant):
 
     ranks = np.arange(len(is_relevant))
@@ -169,9 +166,6 @@ def precision_recall_min_denominator(is_relevant, n_test_items):
 
 
 def rmse(all_items_predicted_ratings, relevant_items, relevant_items_rating):
-
-    # Important, some items will have -np.inf score and are treated as if they did not exist
-
     # RMSE with test items
     relevant_items_error = (all_items_predicted_ratings[relevant_items]-relevant_items_rating)**2
 
