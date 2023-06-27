@@ -1,5 +1,5 @@
 import numpy as np
-import pickle, os
+import pickle
 from Base.Recommender_utils import check_matrix
 
 class BaseRecommender(object):
@@ -56,7 +56,6 @@ class BaseRecommender(object):
 
         dictionary_to_save = {"W_sparse": self.W_sparse}
 
-
         pickle.dump(dictionary_to_save,
                     open(folder_path + file_name, "wb"),
                     protocol=pickle.HIGHEST_PROTOCOL)
@@ -70,7 +69,6 @@ class BaseRecommender(object):
             file_name = self.RECOMMENDER_NAME
 
         print("{}: Loading model from file '{}'".format(self.RECOMMENDER_NAME, folder_path + file_name))
-
 
         data_dict = pickle.load(open(folder_path + file_name, "rb"))
 

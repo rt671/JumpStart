@@ -15,57 +15,8 @@ class Metrics_Object(object):
     def merge_with_other(self, other_metric_object):
         raise NotImplementedError()
 
-
-
-class Coverage_Item(Metrics_Object):
-    """
-    Item coverage represents the percentage of the overall items which were recommended
-    """
-
-    def __init__(self, n_items, ignore_items):
-        super(Coverage_Item, self).__init__()
-        self.recommended_mask = np.zeros(n_items, dtype=np.bool)
-        self.n_ignore_items = len(ignore_items)
-
-    def add_recommendations(self, recommended_items_ids):
-        if len(recommended_items_ids) > 0:
-            self.recommended_mask[recommended_items_ids] = True
-
-    def get_metric_value(self):
-        return self.recommended_mask.sum()/(len(self.recommended_mask)-self.n_ignore_items)
-
-
-    def merge_with_other(self, other_metric_object):
-        assert other_metric_object is Coverage_Item, "Coverage_Item: attempting to merge with a metric object of different type"
-
-        self.recommended_mask = np.logical_or(self.recommended_mask, other_metric_object.recommended_mask)
-
-
-class Coverage_User(Metrics_Object):
-    """
-    User coverage represents the percentage of the overall users for which we can make recommendations.
-    """
-    def __init__(self, n_users, ignore_users):
-        super(Coverage_User, self).__init__()
-        self.users_mask = np.zeros(n_users, dtype=np.bool)
-        self.n_ignore_users = len(ignore_users)
-
-    def add_recommendations(self, recommended_items_ids, user_id):
-        self.users_mask[user_id] = len(recommended_items_ids)>0
-
-    def get_metric_value(self):
-        return self.users_mask.sum()/(len(self.users_mask)-self.n_ignore_users)
-
-    def merge_with_other(self, other_metric_object):
-        assert other_metric_object is Coverage_User, "Coverage_User: attempting to merge with a metric object of different type"
-
-        self.users_mask = np.logical_or(self.users_mask, other_metric_object.users_mask)
-
-
 class MAP(Metrics_Object):
-    """
-    Mean Average Precision, defined as the mean of the AveragePrecision over all users
-    """
+    # Mean Average Precision, defined as the mean of the AveragePrecision over all users
 
     def __init__(self):
         super(MAP, self).__init__()
@@ -85,45 +36,6 @@ class MAP(Metrics_Object):
         self.cumulative_AP += other_metric_object.cumulative_AP
         self.n_users += other_metric_object.n_users
 
-class Gini_Diversity(Metrics_Object):
-    """
-    Gini diversity index, computed from the Gini Index but with inverted range, such that high values mean higher diversity
-    This implementation ignores zero-occurrence items
-    """
-
-    def __init__(self, n_items, ignore_items):
-        super(Gini_Diversity, self).__init__()
-        self.recommended_counter = np.zeros(n_items, dtype=np.float)
-        self.ignore_items = ignore_items.astype(np.int).copy()
-
-    def add_recommendations(self, recommended_items_ids):
-        if len(recommended_items_ids) > 0:
-            self.recommended_counter[recommended_items_ids] += 1
-
-    def get_metric_value(self):
-
-        recommended_counter = self.recommended_counter.copy()
-
-        recommended_counter_mask = np.ones_like(recommended_counter, dtype = np.bool)
-        recommended_counter_mask[self.ignore_items] = False
-        recommended_counter_mask[recommended_counter == 0] = False
-
-        recommended_counter = recommended_counter[recommended_counter_mask]
-
-        n_items = len(recommended_counter)
-
-        recommended_counter_sorted = np.sort(recommended_counter)       # values must be sorted
-        index = np.arange(1, n_items+1)                                 # index per array element
-
-        #gini_index = (np.sum((2 * index - n_items  - 1) * recommended_counter_sorted)) / (n_items * np.sum(recommended_counter_sorted))
-        gini_diversity = 2*np.sum((n_items + 1 - index)/(n_items+1) * recommended_counter_sorted/np.sum(recommended_counter_sorted))
-
-        return gini_diversity
-
-    def merge_with_other(self, other_metric_object):
-        assert other_metric_object is Gini_Diversity, "Gini_Diversity: attempting to merge with a metric object of different type"
-
-        self.recommended_counter += other_metric_object.recommended_counter
 
 def roc_auc(is_relevant):
 
@@ -149,17 +61,6 @@ def precision(is_relevant):
         precision_score = 0.0
     else:
         precision_score = np.sum(is_relevant, dtype=np.float32) / len(is_relevant)
-
-    assert 0 <= precision_score <= 1, precision_score
-    return precision_score
-
-
-def precision_recall_min_denominator(is_relevant, n_test_items):
-
-    if len(is_relevant) == 0:
-        precision_score = 0.0
-    else:
-        precision_score = np.sum(is_relevant, dtype=np.float32) / min(n_test_items, len(is_relevant))
 
     assert 0 <= precision_score <= 1, precision_score
     return precision_score

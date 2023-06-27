@@ -207,7 +207,6 @@ class DataReader(object):
         """
         Loads all saved mappers for the given dataset. Mappers are the union of GLOBAL mappers and dataset specific ones
         """
-
         mappers_list = list(self.GLOBAL_MAPPER)
         mappers_list.extend(self.DATASET_SPECIFIC_MAPPER)
 

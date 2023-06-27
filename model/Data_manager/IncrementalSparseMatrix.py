@@ -28,7 +28,6 @@ class IncrementalSparseMatrix_ListBased(object):
         assert len(row_list_to_add) == len(col_list_to_add) and len(row_list_to_add) == len(data_list_to_add),\
             "IncrementalSparseMatrix: element lists must have different length"
 
-
         col_list_index = [self._get_column_index(column_id) for column_id in col_list_to_add]
         row_list_index = [self._get_row_index(row_id) for row_id in row_list_to_add]
 
@@ -85,7 +84,6 @@ class IncrementalSparseMatrix_ListBased(object):
             column_index = column_id
 
         else:
-
             if column_id in self._column_original_ID_to_index:
                 column_index = self._column_original_ID_to_index[column_id]
 
@@ -102,7 +100,6 @@ class IncrementalSparseMatrix_ListBased(object):
             row_index = row_id
 
         else:
-
             if row_id in self._row_original_ID_to_index:
                 row_index = self._row_original_ID_to_index[row_id]
 
@@ -115,8 +112,6 @@ class IncrementalSparseMatrix_ListBased(object):
 
     def get_nnz(self):
         return len(self._row_list)
-
-
 
     def get_SparseMatrix(self):
 
@@ -191,7 +186,6 @@ class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
                             [data] * n_elements)
 
 
-
     def get_SparseMatrix(self):
 
         if self._n_rows is None:
@@ -208,15 +202,11 @@ class IncrementalSparseMatrix(IncrementalSparseMatrix_ListBased):
                                       dtype=self._dtype_data)
 
         sparseMatrix.eliminate_zeros()
-
-
         return sparseMatrix
 
 
 class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
-    """
-    This class builds an IncrementalSparseMatrix allowing to constrain the row and column IDs that will be added
-    """
+    # This class builds an IncrementalSparseMatrix allowing to constrain the row and column IDs that will be added
 
     def __init__(self, preinitialized_col_mapper = None, preinitialized_row_mapper = None,
                  on_new_col = "add", on_new_row = "add", dtype = np.float64):
@@ -249,8 +239,6 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
             self._row_original_ID_to_index = preinitialized_row_mapper.copy()
 
 
-
-
     def _get_column_index(self, column_id):
 
         if column_id in self._column_original_ID_to_index:
@@ -266,8 +254,6 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
         return column_index
 
 
-
-
     def _get_row_index(self, row_id):
 
         if row_id in self._row_original_ID_to_index:
@@ -281,8 +267,6 @@ class IncrementalSparseMatrix_FilterIDs(IncrementalSparseMatrix):
             row_index = None
 
         return row_index
-
-
 
 
     def add_data_lists(self, row_list_to_add, col_list_to_add, data_list_to_add):

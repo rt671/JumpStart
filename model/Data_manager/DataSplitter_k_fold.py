@@ -15,7 +15,6 @@ class DataSplitter_k_fold(object):
 
         super(DataSplitter_k_fold, self).__init__()
 
-
     def get_statistics_URM(self):
         n_items = int(self.n_items)
         n_users = int(self.n_users)
@@ -34,7 +33,6 @@ class DataSplitter_k_fold(object):
         for fold_index in range(self.n_folds):
             URM_fold_object = self.fold_split[fold_index]["URM"]
             items_in_fold = self.fold_split[fold_index]["items_in_fold"]
-
 
             # print("\t Statistics for fold {}: n_interactions {} ( {:.2f}%), n_items {} ( {:.2f}%), density: {:.2E}".format(
             #     fold_index,
@@ -79,11 +77,9 @@ class DataSplitter_k_fold(object):
         if save_folder_path is not False and not self.force_new_split:
 
             try:
-
                 self._load_previously_built_split_and_attributes(save_folder_path)
 
             except FileNotFoundError:
-
                 # Split not found, either stop or create a new one
                 if self.forbid_new_split:
                     raise ValueError("DataSplitter_k_fold: Preloaded data not found, but creating a new split is forbidden. Terminating")
@@ -100,9 +96,7 @@ class DataSplitter_k_fold(object):
 
                     print("DataSplitter_k_fold: Preloaded data not found, reading from original files... Done")
 
-
             except Exception:
-
                 print("DataSplitter_k_fold: Reading split from {} caused the following exception...".format(save_folder_path))
                 traceback.print_exc()
                 raise Exception("DataSplitter_k_fold: Exception while reading split")
@@ -113,7 +107,6 @@ class DataSplitter_k_fold(object):
         print("DataSplitter_k_fold: Done.")
 
     def get_statistics_ICM(self):
-
         for ICM_name in self.dataReader_object.get_loaded_ICM_names():
 
             ICM_object = getattr(self, ICM_name)
@@ -123,47 +116,27 @@ class DataSplitter_k_fold(object):
             print("\t Statistics for {}: n_features {}, feature occurrences {}, density: {:.2E}".format(
                 ICM_name, n_features, ICM_object.nnz, ICM_object.nnz/(int(n_items)*int(n_features))
             ))
-
         print("\n")
 
     def get_fold_split(self):
         return self.fold_split
 
-
     def get_fold(self, n_fold):
         return self.fold_split[n_fold]["URM"].copy()
 
-
-
     def get_URM_train_for_test_fold(self, n_test_fold):
-        """
-        The train set is defined as all data except the one of that fold, which is the test
-        :param n_fold:
-        :return:
-        """
-
+    
         URM_test = self.fold_split[n_test_fold]["URM"].copy()
-
         URM_train = sps.csr_matrix(URM_test.shape)
 
         for fold_index in range(self.n_folds):
-
             if fold_index != n_test_fold:
                 URM_fold_object = self.fold_split[fold_index]["URM"]
-
                 URM_train+=URM_fold_object
-
 
         return URM_train, URM_test
 
-
-
     def get_holdout_split(self):
-        """
-        The train set is defined as all data except the one of that fold, which is the test
-        :param n_fold:
-        :return:
-        """
 
         assert self.n_folds >= 3, "DataSplitter: To get a holdout split URM_train, URM_validation, URM_test, the splitter must have at least 3 folds, currently it has {}".format(self.n_folds)
 
@@ -172,50 +145,32 @@ class DataSplitter_k_fold(object):
         URM_test = self.fold_split[0]["URM"].copy()
         URM_validation = self.fold_split[1]["URM"].copy()
 
-
         URM_train = sps.csr_matrix(URM_test.shape)
 
         for fold_index in range(2, self.n_folds):
-
             URM_fold_object = self.fold_split[fold_index]["URM"]
-
             URM_train+=URM_fold_object
 
-
         print("DataSplitter: Generating holdout split... done!")
-
         return URM_train, URM_validation, URM_test
 
-
     def __iter__(self):
-
         self.__iterator_current_fold = 0
         return self
 
-
     def __next__(self):
-
         fold_to_return = self.__iterator_current_fold
 
         if self.__iterator_current_fold >= self.n_folds:
             raise StopIteration
 
         self.__iterator_current_fold += 1
-
         return fold_to_return, self[fold_to_return]
 
-
     def __getitem__(self, n_test_fold):
-        """
-        :param index:
-        :return:
-        """
-
         return self.get_URM_train_for_test_fold(n_test_fold)
 
-
     def __len__(self):
-
         return self.n_folds
 
 
@@ -234,19 +189,13 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
                                                        n_folds=n_folds,
                                                        forbid_new_split = forbid_new_split)
 
-
-
     def _get_split_subfolder_name(self):
         return "warm_{}_fold/".format(self.n_folds)
-
-
 
     def _split_data_from_original_dataset(self, save_folder_path):
         self.dataReader_object.load_data()
         URM = self.dataReader_object.get_URM_all()
         URM = sps.csr_matrix(URM)
-
-
 
         # if not self.allow_cold_users:
         #     user_interactions = np.ediff1d(URM.indptr)
@@ -257,10 +206,7 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
         #     URM = URM[user_to_preserve,:]
 
-
         self.n_users, self.n_items = URM.shape
-
-
         URM = sps.csr_matrix(URM)
 
         # Create empty URM for each fold
@@ -290,8 +236,6 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
             user_profile = user_profile[indices_to_suffle]
             user_interactions = URM.data[start_user_position:end_user_position][indices_to_suffle]
-
-
 
             # interactions_per_fold is a float number, to auto-adjust fold size
             interactions_per_fold = len(user_profile)/self.n_folds
@@ -341,9 +285,6 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
                     protocol=pickle.HIGHEST_PROTOCOL)
 
 
-
-
-
         for ICM_name in self.dataReader_object.get_loaded_ICM_names():
 
             pickle.dump(self.dataReader_object.get_ICM_from_name(ICM_name),
@@ -358,20 +299,16 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
     def _load_previously_built_split_and_attributes(self, save_folder_path):
         # Loads all URM and ICM
-
         if self.allow_cold_users:
             allow_cold_users_file_name = "allow_cold_users"
         else:
             allow_cold_users_file_name = "only_warm_users"
-
 
         data_dict = pickle.load(open(save_folder_path + "URM_{}_fold_split_{}".format(self.n_folds, allow_cold_users_file_name), "rb"))
 
         for attrib_name in data_dict.keys():
              self.__setattr__(attrib_name, data_dict[attrib_name])
 
-
         for ICM_name in self.dataReader_object.get_loaded_ICM_names():
-
             ICM_object = pickle.load(open(save_folder_path + "{}".format(ICM_name), "rb"))
             self.__setattr__(ICM_name, ICM_object)

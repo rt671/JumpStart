@@ -2,28 +2,16 @@ import time, sys
 from Base.Recommender_utils import seconds_to_biggest_unit
 
 class Incremental_Training_Early_Stopping(object):
-    """
-    "Incremental" means that the model is updated at every epoch
-    """
-
     def __init__(self):
         super(Incremental_Training_Early_Stopping, self).__init__()
 
-
     def get_early_stopping_final_epochs_dict(self):
-        """
-        This function returns a dictionary to be used as optimal parameters in the .fit() function
-        """
+        # This function returns a dictionary to be used as optimal parameters in the .fit() function
         return {"epochs": self.epochs_best}
 
-
-
     def _run_epoch(self, num_epoch):
-        """
-        This function runs on a single epoch on the object we train.
-        """
+        # This function runs on a single epoch on the object we train.
         raise NotImplementedError()
-
 
     def _prepare_model_for_validation(self):
         """
@@ -34,14 +22,9 @@ class Incremental_Training_Early_Stopping(object):
         """
         raise NotImplementedError()
 
-
     def _update_best_model(self):
-        """
-        This function is called when the incremental model is found to have better validation score than the current best one
-        """
+        # Called when incremental model has better validation score than the current best one
         raise NotImplementedError()
-
-
 
     def _train_with_early_stopping(self, epochs_max, epochs_min = 0,
                                    validation_every_n = None, stop_on_validation = False,
@@ -67,7 +50,6 @@ class Incremental_Training_Early_Stopping(object):
         convergence = False
 
         self.epochs_best = 0
-
         epochs_current = 0
 
         while epochs_current < epochs_max and not convergence:
@@ -137,7 +119,6 @@ class Incremental_Training_Early_Stopping(object):
             self._prepare_model_for_validation()
             self._update_best_model()
 
-
         # Stop when max epochs reached and not early-stopping
         if not convergence:
             elapsed_time = time.time() - start_time
@@ -149,4 +130,3 @@ class Incremental_Training_Early_Stopping(object):
             # else:
             #     print("{}: Terminating at epoch {}. Elapsed time {:.2f} {}".format(
             #         algorithm_name, epochs_current, new_time_value, new_time_unit))
-
