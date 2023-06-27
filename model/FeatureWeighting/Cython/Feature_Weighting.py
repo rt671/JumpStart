@@ -1,4 +1,4 @@
-from Base.Incremental_Training_Early_Stopping import Incremental_Training_Early_Stopping
+from Base.Early_Stopping import Early_Stopping
 from Base.Recommender_utils import check_matrix
 from Base.Similarity.Cython.Compute_Similarity_Cython import Compute_Similarity_Cython
 from Base.BaseRecommender import BaseRecommender

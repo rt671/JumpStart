@@ -1,9 +1,9 @@
 import time, sys
 from Base.Recommender_utils import seconds_to_biggest_unit
 
-class Incremental_Training_Early_Stopping(object):
+class Early_Stopping(object):
     def __init__(self):
-        super(Incremental_Training_Early_Stopping, self).__init__()
+        super(Early_Stopping, self).__init__()
 
     def get_early_stopping_final_epochs_dict(self):
         # This function returns a dictionary to be used as optimal parameters in the .fit() function
@@ -29,7 +29,7 @@ class Incremental_Training_Early_Stopping(object):
     def _train_with_early_stopping(self, epochs_max, epochs_min = 0,
                                    validation_every_n = None, stop_on_validation = False,
                                    validation_metric = None, lower_validations_allowed = None, evaluator_object = None,
-                                   algorithm_name = "Incremental_Training_Early_Stopping"):
+                                   algorithm_name = "Early_Stopping"):
 
         assert epochs_max > 0, "{}: Number of epochs_max must be > 0, passed was {}".format(algorithm_name, epochs_max)
         assert epochs_min >= 0, "{}: Number of epochs_min must be >= 0, passed was {}".format(algorithm_name, epochs_min)

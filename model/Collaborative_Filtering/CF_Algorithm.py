@@ -8,15 +8,15 @@ from Base.Recommender_utils import check_matrix, similarityMatrixTopK
 from Base.BaseRecommender import BaseRecommender
 import time, sys
 
-class RP3betaRecommender(BaseRecommender):
+class CF_Algorithm(BaseRecommender):
     RECOMMENDER_NAME = "Collaborative_Filtering"
 
     def __init__(self, URM_train):
-        super(RP3betaRecommender, self).__init__(URM_train)
+        super(CF_Algorithm, self).__init__(URM_train)
 
 
     def __str__(self):
-        return "RP3beta(alpha={}, beta={}, min_rating={}, topk={}, implicit={}, normalize_similarity={})".format(self.alpha,
+        return "CF(alpha={}, beta={}, min_rating={}, topk={}, implicit={}, normalize_similarity={})".format(self.alpha,
                                                                                         self.beta, self.min_rating, self.topK,
                                                                                         self.implicit, self.normalize_similarity)
 

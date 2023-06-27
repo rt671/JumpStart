@@ -1,5 +1,5 @@
 import pickle
-from Collaborative_Filtering.RP3betaRecommender import RP3betaRecommender
+from Collaborative_Filtering.CF_Algorithm import CF_Algorithm
 from FeatureWeighting.Cython.Feature_Weighting import Feature_Weighting, EvaluatorCFW_D_wrapper
 from Base.Evaluation.Evaluator import EvaluatorHoldout
 from saveMatrices import saveModel
@@ -60,10 +60,9 @@ def retrainModel(user_id_updated,item_id_array,rating_array,firstTime=False):
                     'firstTime':firstTime,
                     'item_id_array':item_id_array}
 
-    recommender_collaborative = RP3betaRecommender(URM_train)
+    recommender_collaborative = CF_Algorithm(URM_train)
     recommender_collaborative.fit(**cf_parameters)
 
-    # We get the similarity matrix
     # The similarity is a scipy.sparse matrix of shape |items|x|items|
     similarity_collaborative = recommender_collaborative.W_sparse.copy()
 
