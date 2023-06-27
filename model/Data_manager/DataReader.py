@@ -124,10 +124,6 @@ class DataReader(object):
     def _get_dataset_name_data_subfolder(self):
         """
         Returns the subfolder inside the dataset folder tree which contains the specific data to be loaded
-        This method must be overridden by any data post processing object like k-cores / user sampling / interaction sampling etc
-        to be applied before the data split
-
-        :return: original or k_cores etc...
         """
         return self.DATASET_SUBFOLDER_ORIGINAL
 
@@ -154,8 +150,6 @@ class DataReader(object):
         self._load_from_original_file()
 
         if save_folder_path not in [False]:
-
-            # If directory does not exist, create
             if not os.path.exists(save_folder_path):
                 print("DataReader: Creating folder '{}'".format(save_folder_path))
                 os.makedirs(save_folder_path)
@@ -181,7 +175,6 @@ class DataReader(object):
     def _load_from_saved_sparse_matrix(self, save_folder_path):
 
         file_names_to_load = self.get_loaded_ICM_names()
-
         file_names_to_load.extend(self.get_loaded_URM_names())
 
         for file_name in file_names_to_load:
@@ -196,12 +189,8 @@ class DataReader(object):
 
     def _save_mappers(self, save_folder_path):
         """
-        Saves the mappers for the given dataset. Mappers associate the original ID of user, item, feature, to the
-        index in the sparse matrix
-        :param dataset_specific_mappers_list:
-        :return:
+        Saves the mappers for the given dataset. Mappers associate the original ID of user, item, feature, to the index in the sparse matrix
         """
-
         mappers_list = list(self.GLOBAL_MAPPER)
         mappers_list.extend(self.DATASET_SPECIFIC_MAPPER)
 
@@ -217,7 +206,6 @@ class DataReader(object):
     def _load_mappers(self, save_folder_path):
         """
         Loads all saved mappers for the given dataset. Mappers are the union of GLOBAL mappers and dataset specific ones
-        :return:
         """
 
         mappers_list = list(self.GLOBAL_MAPPER)
@@ -228,15 +216,3 @@ class DataReader(object):
 
         for mapper_name in mappers_list:
             self.__setattr__(mapper_name, pickle.load(open(save_folder_path + mapper_name, "rb")))
-
-
-    def _merge_ICM(self, ICM1, ICM2, mapper_ICM1, mapper_ICM2):
-
-        ICM_all = sps.hstack([ICM1, ICM2], format='csr')
-
-        mapper_ICM_all = mapper_ICM1.copy()
-
-        for key in mapper_ICM2.keys():
-            mapper_ICM_all[key] = mapper_ICM2[key] + len(mapper_ICM1)
-
-        return  ICM_all, mapper_ICM_all

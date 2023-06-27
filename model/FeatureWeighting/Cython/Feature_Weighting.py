@@ -1,6 +1,6 @@
 from Base.Incremental_Training_Early_Stopping import Incremental_Training_Early_Stopping
 from Base.Recommender_utils import check_matrix
-from Base.Similarity.Compute_Similarity import Compute_Similarity
+from Base.Similarity.Cython.Compute_Similarity_Cython import Compute_Similarity_Cython
 from Base.BaseRecommender import BaseRecommender
 
 import time, sys
@@ -133,7 +133,7 @@ class Feature_Weighting(BaseRecommender,Incremental_Training_Early_Stopping):
 
         start_time_batch = time.time()
 
-        self.similarity = Compute_Similarity(self.ICM.T, shrink=0, topK=self.topK, normalize=False)
+        self.similarity = Compute_Similarity_Cython(self.ICM.T, shrink=0, topK=self.topK, normalize=False)
         sim_mat_content = self.similarity.compute_similarity()
         sim_mat_content = check_matrix(sim_mat_content, "csr")
         # print("SIM_MAT_CONTENT:")
@@ -273,7 +273,7 @@ class Feature_Weighting(BaseRecommender,Incremental_Training_Early_Stopping):
         else:
             assert False, "{}: compute_W_sparse, 'model_to_use' parameter not recognized".format(self.RECOMMENDER_NAME)
 
-        self.similarity = Compute_Similarity(self.ICM.T, shrink=0, topK=self.topK,
+        self.similarity = Compute_Similarity_Cython(self.ICM.T, shrink=0, topK=self.topK,
                                             normalize=self.normalize_similarity, row_weights=feature_weights)
 
         self.W_sparse = self.similarity.compute_similarity()

@@ -5,6 +5,8 @@ import time
 def check_matrix(X, format='csc', dtype=np.float32):
     if format == 'csr' and not isinstance(X, sps.csr_matrix):
         return X.tocsr().astype(dtype)
+    elif format == 'csc' and not isinstance(X, sps.csc_matrix):
+        return X.tocsc().astype(dtype)
     elif isinstance(X, np.ndarray):
         X = sps.csr_matrix(X, dtype=dtype)
         X.eliminate_zeros()

@@ -242,9 +242,6 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
 
     def _split_data_from_original_dataset(self, save_folder_path):
-
-
-
         self.dataReader_object.load_data()
         URM = self.dataReader_object.get_URM_all()
         URM = sps.csr_matrix(URM)
@@ -359,15 +356,8 @@ class DataSplitter_Warm_k_fold(DataSplitter_k_fold):
 
         print("DataSplitter: Split complete")
 
-
-
-
-
     def _load_previously_built_split_and_attributes(self, save_folder_path):
-        """
-        Loads all URM and ICM
-        :return:
-        """
+        # Loads all URM and ICM
 
         if self.allow_cold_users:
             allow_cold_users_file_name = "allow_cold_users"
